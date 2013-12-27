@@ -1,0 +1,22 @@
+D:\Projects\MyEmailExtractor\MyEmailExtractor\bin\Release\My Email Extractor.exe.config
+D:\Projects\MyEmailExtractor\MyEmailExtractor\obj\x86\Release\Interop.SHDocVw.dll
+D:\Projects\MyEmailExtractor\MyEmailExtractor\obj\x86\Release\MyEmailExtractor.csproj.ResolveComReference.cache
+D:\Projects\MyEmailExtractor\MyEmailExtractor\bin\Release\My Email Extractor.exe.manifest
+D:\Projects\MyEmailExtractor\MyEmailExtractor\bin\Release\My Email Extractor.application
+D:\Projects\MyEmailExtractor\MyEmailExtractor\bin\Release\My Email Extractor.exe
+D:\Projects\MyEmailExtractor\MyEmailExtractor\bin\Release\My Email Extractor.pdb
+D:\Projects\MyEmailExtractor\MyEmailExtractor\bin\Release\HtmlAgilityPack.dll
+D:\Projects\MyEmailExtractor\MyEmailExtractor\bin\Release\HtmlAgilityPack.pdb
+D:\Projects\MyEmailExtractor\MyEmailExtractor\bin\Release\HtmlAgilityPack.xml
+D:\Projects\MyEmailExtractor\MyEmailExtractor\obj\x86\Release\MyEmEx.MainForm.resources
+D:\Projects\MyEmailExtractor\MyEmailExtractor\obj\x86\Release\MyEmEx.ChildForm.resources
+D:\Projects\MyEmailExtractor\MyEmailExtractor\obj\x86\Release\MyEmEx.SetupForm.resources
+D:\Projects\MyEmailExtractor\MyEmailExtractor\obj\x86\Release\MyEmEx.Properties.Resources.resources
+D:\Projects\MyEmailExtractor\MyEmailExtractor\obj\x86\Release\MyEmailExtractor.csproj.GenerateResource.Cache
+D:\Projects\MyEmailExtractor\MyEmailExtractor\obj\x86\Release\My Email Extractor.exe.manifest
+D:\Projects\MyEmailExtractor\MyEmailExtractor\obj\x86\Release\My Email Extractor.application
+D:\Projects\MyEmailExtractor\MyEmailExtractor\obj\x86\Release\My Email Extractor.exe
+D:\Projects\MyEmailExtractor\MyEmailExtractor\obj\x86\Release\My Email Extractor.pdb
+D:\Projects\MyEmailExtractor\MyEmailExtractor\obj\x86\Release\MyEmEx.AboutBox.resources
+D:\Projects\MyEmailExtractor\MyEmailExtractor\obj\x86\Release\My Email Extractor.exe.licenses
+D:\Projects\MyEmailExtractor\MyEmailExtractor\obj\x86\Release\MyEmailExtractor.csprojResolveAssemblyReference.cache

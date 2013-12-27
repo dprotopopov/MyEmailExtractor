@@ -1,0 +1,16 @@
+D:\Projects\MyEmEx\MyEmEx\obj\x86\Debug\Interop.SHDocVw.dll
+D:\Projects\MyEmEx\MyEmEx\obj\x86\Debug\MyEmEx.csproj.ResolveComReference.cache
+D:\Projects\MyEmEx\MyEmEx\obj\x86\Debug\ResolveAssemblyReference.cache
+D:\Projects\MyEmEx\MyEmEx\obj\x86\Debug\MyEmEx.mainForm.resources
+D:\Projects\MyEmEx\MyEmEx\obj\x86\Debug\MyEmEx.childForm.resources
+D:\Projects\MyEmEx\MyEmEx\obj\x86\Debug\MyEmEx.setupForm.resources
+D:\Projects\MyEmEx\MyEmEx\obj\x86\Debug\GenerateResource.read.1.tlog
+D:\Projects\MyEmEx\MyEmEx\obj\x86\Debug\GenerateResource.write.1.tlog
+D:\Projects\MyEmEx\MyEmEx\bin\Debug\HtmlAgilityPack.dll
+D:\Projects\MyEmEx\MyEmEx\bin\Debug\HtmlAgilityPack.pdb
+D:\Projects\MyEmEx\MyEmEx\bin\Debug\HtmlAgilityPack.xml
+D:\Projects\MyEmEx\MyEmEx\bin\Debug\myemex.exe
+D:\Projects\MyEmEx\MyEmEx\bin\Debug\myemex.pdb
+D:\Projects\MyEmEx\MyEmEx\obj\x86\Debug\MyEmEx.Properties.Resources.resources
+D:\Projects\MyEmEx\MyEmEx\obj\x86\Debug\myemex.exe
+D:\Projects\MyEmEx\MyEmEx\obj\x86\Debug\myemex.pdb

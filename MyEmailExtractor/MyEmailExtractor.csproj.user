@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <ProjectView>ProjectFiles</ProjectView>
+    <PublishUrlHistory>ftp://proto%40protopopov.ru/public_html/myemailextractor/|ftp://proto%40protopopov.ru/public_html/myemex/|ftp://proto%40rba-design.ru/public_html/myemex/|ftp://proto:&amp;EBS9v4^7IQ8%40rba-design.ru/public_html/myemex/|ftp://proto%40rbadesign.us/public_html/myemex/</PublishUrlHistory>
+    <InstallUrlHistory>http://protopopov.ru/myemailextractor/|http://protopopov.ru/myemex/|http://rba-design.ru/~proto/myemex/|http://rbadesign.us/~proto/myemex/</InstallUrlHistory>
+    <SupportUrlHistory>http://protopopov.ru/myemailextractor/|http://protopopov.ru/myemex/|http://rba-design.ru/~proto/myemex/</SupportUrlHistory>
+    <UpdateUrlHistory />
+    <BootstrapperUrlHistory />
+    <ErrorReportUrlHistory>http://protopopov.ru/myemailextractor/|http://protopopov.ru/myemex/|http://rba-design.ru/~proto/myemex/</ErrorReportUrlHistory>
+    <FallbackCulture>ru-RU</FallbackCulture>
+    <VerifyUploadedFiles>false</VerifyUploadedFiles>
+  </PropertyGroup>
+</Project>
