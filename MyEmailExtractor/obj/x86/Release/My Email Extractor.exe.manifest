@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <asmv1:assembly xsi:schemaLocation="urn:schemas-microsoft-com:asm.v1 assembly.adaptive.xsd" manifestVersion="1.0" xmlns:asmv1="urn:schemas-microsoft-com:asm.v1" xmlns="urn:schemas-microsoft-com:asm.v2" xmlns:asmv2="urn:schemas-microsoft-com:asm.v2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:co.v1="urn:schemas-microsoft-com:clickonce.v1" xmlns:asmv3="urn:schemas-microsoft-com:asm.v3" xmlns:dsig="http://www.w3.org/2000/09/xmldsig#" xmlns:co.v2="urn:schemas-microsoft-com:clickonce.v2">
-  <asmv1:assemblyIdentity name="My Email Extractor.exe" version="2.0.0.10" publicKeyToken="0000000000000000" language="ru" processorArchitecture="x86" type="win32" />
+  <asmv1:assemblyIdentity name="My Email Extractor.exe" version="2.0.0.11" publicKeyToken="0000000000000000" language="ru" processorArchitecture="x86" type="win32" />
   <application />
   <entryPoint>
     <assemblyIdentity name="My Email Extractor" version="2.0.0.0" publicKeyToken="1C196A45C0785AC0" language="neutral" processorArchitecture="x86" />
@@ -24,7 +24,7 @@
 
         Если вы хотите использовать виртуализацию файлов и реестра для обратной
              совместимости, удалите узел requestedExecutionLevel.
- -->
+    -->
         <requestedExecutionLevel level="asInvoker" uiAccess="false" />
       </requestedPrivileges>
     </security>
@@ -43,96 +43,108 @@
   </dependency>
   <dependency>
     <dependentAssembly dependencyType="preRequisite" allowDelayedBinding="true">
-      <assemblyIdentity name="DevExpress.BonusSkins.v13.1" version="13.1.5.0" publicKeyToken="B88D1754D700E49A" language="neutral" processorArchitecture="msil" />
+      <assemblyIdentity name="DevExpress.BonusSkins.v13.2" version="13.2.5.0" publicKeyToken="B88D1754D700E49A" language="neutral" processorArchitecture="msil" />
     </dependentAssembly>
   </dependency>
   <dependency>
     <dependentAssembly dependencyType="preRequisite" allowDelayedBinding="true">
-      <assemblyIdentity name="DevExpress.Data.v13.1" version="13.1.5.0" publicKeyToken="B88D1754D700E49A" language="neutral" processorArchitecture="msil" />
+      <assemblyIdentity name="DevExpress.Data.v13.2" version="13.2.5.0" publicKeyToken="B88D1754D700E49A" language="neutral" processorArchitecture="msil" />
     </dependentAssembly>
   </dependency>
   <dependency>
     <dependentAssembly dependencyType="preRequisite" allowDelayedBinding="true">
-      <assemblyIdentity name="DevExpress.Printing.v13.1.Core" version="13.1.5.0" publicKeyToken="B88D1754D700E49A" language="neutral" processorArchitecture="msil" />
+      <assemblyIdentity name="DevExpress.Printing.v13.2.Core" version="13.2.5.0" publicKeyToken="B88D1754D700E49A" language="neutral" processorArchitecture="msil" />
     </dependentAssembly>
   </dependency>
   <dependency>
     <dependentAssembly dependencyType="preRequisite" allowDelayedBinding="true">
-      <assemblyIdentity name="DevExpress.Sparkline.v13.1.Core" version="13.1.5.0" publicKeyToken="B88D1754D700E49A" language="neutral" processorArchitecture="msil" />
+      <assemblyIdentity name="DevExpress.Sparkline.v13.2.Core" version="13.2.5.0" publicKeyToken="B88D1754D700E49A" language="neutral" processorArchitecture="msil" />
     </dependentAssembly>
   </dependency>
   <dependency>
     <dependentAssembly dependencyType="preRequisite" allowDelayedBinding="true">
-      <assemblyIdentity name="DevExpress.Utils.v13.1" version="13.1.5.0" publicKeyToken="B88D1754D700E49A" language="neutral" processorArchitecture="msil" />
+      <assemblyIdentity name="DevExpress.Utils.v13.2" version="13.2.5.0" publicKeyToken="B88D1754D700E49A" language="neutral" processorArchitecture="msil" />
     </dependentAssembly>
   </dependency>
   <dependency>
     <dependentAssembly dependencyType="preRequisite" allowDelayedBinding="true">
-      <assemblyIdentity name="DevExpress.XtraBars.v13.1" version="13.1.5.0" publicKeyToken="B88D1754D700E49A" language="neutral" processorArchitecture="msil" />
+      <assemblyIdentity name="DevExpress.XtraBars.v13.2" version="13.2.5.0" publicKeyToken="B88D1754D700E49A" language="neutral" processorArchitecture="msil" />
     </dependentAssembly>
   </dependency>
   <dependency>
     <dependentAssembly dependencyType="preRequisite" allowDelayedBinding="true">
-      <assemblyIdentity name="DevExpress.XtraEditors.v13.1" version="13.1.5.0" publicKeyToken="B88D1754D700E49A" language="neutral" processorArchitecture="msil" />
+      <assemblyIdentity name="DevExpress.XtraEditors.v13.2" version="13.2.5.0" publicKeyToken="B88D1754D700E49A" language="neutral" processorArchitecture="msil" />
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="ru\DevExpress.Data.v13.1.resources.dll" size="187896">
-      <assemblyIdentity name="DevExpress.Data.v13.1.resources" version="13.1.0.0" publicKeyToken="B88D1754D700E49A" language="ru" processorArchitecture="msil" />
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="ru\DevExpress.Data.v13.2.resources.dll" size="187896">
+      <assemblyIdentity name="DevExpress.Data.v13.2.resources" version="13.2.0.0" publicKeyToken="B88D1754D700E49A" language="ru" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>SIoJHwMrKEcgd2kBo2bt67ct4zg3yuJ9UEmQB8hJ4CE=</dsig:DigestValue>
+        <dsig:DigestValue>kfV4p2mkeyu0Jp5hcASKDkRK/UjY2u41p+wtM8Lka+A=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="ru\DevExpress.Printing.v13.1.Core.resources.dll" size="13816">
-      <assemblyIdentity name="DevExpress.Printing.v13.1.Core.resources" version="13.1.0.0" publicKeyToken="B88D1754D700E49A" language="ru" processorArchitecture="msil" />
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="ru\DevExpress.Printing.v13.2.Core.resources.dll" size="13816">
+      <assemblyIdentity name="DevExpress.Printing.v13.2.Core.resources" version="13.2.0.0" publicKeyToken="B88D1754D700E49A" language="ru" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>1dwv+Ulm7xqWz4uJCIR5xPw3xY21CU0ahDWdLvHoKNo=</dsig:DigestValue>
+        <dsig:DigestValue>GYzzwCkNiF2s5U688jEuwzltflTlUag4AOAWgOiiAgY=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="ru\DevExpress.Utils.v13.1.resources.dll" size="40440">
-      <assemblyIdentity name="DevExpress.Utils.v13.1.resources" version="13.1.0.0" publicKeyToken="B88D1754D700E49A" language="ru" processorArchitecture="msil" />
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="ru\DevExpress.Sparkline.v13.2.Core.resources.dll" size="10744">
+      <assemblyIdentity name="DevExpress.Sparkline.v13.2.Core.resources" version="13.2.0.0" publicKeyToken="B88D1754D700E49A" language="ru" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>WJFZIHVp1AN6zoD6UBmqOZjXIdQCx2JR5k5fSbBUJwM=</dsig:DigestValue>
+        <dsig:DigestValue>Z61kq1rX+xsnPnRSA31Tfd1M3tndkB8fR2WQAGmkp1k=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="ru\DevExpress.XtraBars.v13.1.resources.dll" size="51704">
-      <assemblyIdentity name="DevExpress.XtraBars.v13.1.resources" version="13.1.0.0" publicKeyToken="B88D1754D700E49A" language="ru" processorArchitecture="msil" />
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="ru\DevExpress.Utils.v13.2.resources.dll" size="40440">
+      <assemblyIdentity name="DevExpress.Utils.v13.2.resources" version="13.2.0.0" publicKeyToken="B88D1754D700E49A" language="ru" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>rZZ6FLOvDY8D3Y+E4vKHNQxi0H/i1EfpvXVqB5Z1WJw=</dsig:DigestValue>
+        <dsig:DigestValue>guC+1WFXh0HjLABYW97pWxx+BM5Oi4HRN7FY3GkVOcM=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="ru\DevExpress.XtraEditors.v13.1.resources.dll" size="76792">
-      <assemblyIdentity name="DevExpress.XtraEditors.v13.1.resources" version="13.1.0.0" publicKeyToken="B88D1754D700E49A" language="ru" processorArchitecture="msil" />
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="ru\DevExpress.XtraBars.v13.2.resources.dll" size="51704">
+      <assemblyIdentity name="DevExpress.XtraBars.v13.2.resources" version="13.2.0.0" publicKeyToken="B88D1754D700E49A" language="ru" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>e1yErOYMRPdy0PgRHp0zUzCo/8otAWsZzoWnktARSrA=</dsig:DigestValue>
+        <dsig:DigestValue>EtmsWxtNjkrnZEwgx5RGdaS9z1A77n44rRBtp5JBxoE=</dsig:DigestValue>
+      </hash>
+    </dependentAssembly>
+  </dependency>
+  <dependency>
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="ru\DevExpress.XtraEditors.v13.2.resources.dll" size="76792">
+      <assemblyIdentity name="DevExpress.XtraEditors.v13.2.resources" version="13.2.0.0" publicKeyToken="B88D1754D700E49A" language="ru" processorArchitecture="msil" />
+      <hash>
+        <dsig:Transforms>
+          <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+        </dsig:Transforms>
+        <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
+        <dsig:DigestValue>rsrBkjcURakwtpODQphc8TDzeOUC8JB8qBrjvnHcPJ8=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
@@ -149,14 +161,14 @@
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="My Email Extractor.exe" size="120320">
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="My Email Extractor.exe" size="120832">
       <assemblyIdentity name="My Email Extractor" version="2.0.0.0" publicKeyToken="1C196A45C0785AC0" language="neutral" processorArchitecture="x86" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>fAaQSzBSbl2TIa0DvHGAFaR92h1yRwFNzKEo6PP7Tfk=</dsig:DigestValue>
+        <dsig:DigestValue>dCry63shtZFhzXBierfdAp2+D3jdt1mpwuVo8P90mtU=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
