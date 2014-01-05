@@ -1,16 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 using System.Threading;
 using System.Text.RegularExpressions;
 using System.Diagnostics;
 using System.IO;
-using System.Resources;
 using HtmlAgilityPack;
 
 namespace MyEmEx
@@ -19,27 +13,25 @@ namespace MyEmEx
     {
         private class ThreadProcArg
         {
-            public Semaphore semaphore0;
-            public Semaphore semaphore1;
-            public Semaphore semaphore2;
+            public Semaphore Semaphore0;
+            public Semaphore Semaphore1;
+            public Semaphore Semaphore2;
             public ChildForm This;
-            public int index;
-            public int maxLevel;
+            public int Index;
+            public int MaxLevel;
         }
 
         private Semaphore _semaphore0;
         private Semaphore _semaphore1 = new Semaphore(1, 1);
         private Semaphore _semaphore2 = new Semaphore(1, 1);
-        private int _index = 0;
-        private bool _isRunning = false;
-        private ImageList _imageList1 = new ImageList();
-        private ImageList _imageList2 = new ImageList();
+        private int _index;
+        private bool _isRunning;
 
         private int _maxLevel;
         private int _navigatingCountdown = 3;
 
-        delegate void GetUrlCallback(int index, ref String Url, ref int level);
-        delegate void AddUrlCallback(String Url, int level);
+        delegate void GetUrlCallback(int index, ref String url, ref int level);
+        delegate void AddUrlCallback(String url, int level);
         delegate void AddEmailCallback(String email);
 
         public void GetUrl(int index, ref String url, ref int level)
@@ -47,7 +39,7 @@ namespace MyEmEx
             // InvokeRequired required compares the thread ID of the
             // calling thread to the thread ID of the creating thread.
             // If these threads are different, it returns true.
-            if (this.listView2.InvokeRequired)
+            if (listView2.InvokeRequired)
             {
                 GetUrlCallback d = new GetUrlCallback(GetUrl);
                 var arr = new object[] { index, url, level };
@@ -57,7 +49,7 @@ namespace MyEmEx
             }
             else
             {
-                ListViewItem lvi = this.listView2.Items[index];
+                ListViewItem lvi = listView2.Items[index];
                 url = lvi.Text;
                 level = Convert.ToInt32(lvi.SubItems[1].Text);
                 lvi.ImageIndex = 1;
@@ -69,20 +61,20 @@ namespace MyEmEx
             // InvokeRequired required compares the thread ID of the
             // calling thread to the thread ID of the creating thread.
             // If these threads are different, it returns true.
-            if (this.listView2.InvokeRequired)
+            if (listView2.InvokeRequired)
             {
                 AddUrlCallback d = new AddUrlCallback(AddUrl);
-                this.Invoke(d, new object[] { url, level });
+                Invoke(d, new object[] { url, level });
             }
             else
             {
-                if (this.listView2.Items[url.ToLower()] == null)
+                if (listView2.Items[url.ToLower()] == null)
                 {
                     ListViewItem lvi = new ListViewItem(url);
                     lvi.ImageIndex = 0;
                     lvi.Name = url.ToLower();
                     lvi.SubItems.Add(Convert.ToString(level));
-                    this.listView2.Items.Add(lvi);
+                    listView2.Items.Add(lvi);
                 }
             }
         }
@@ -91,18 +83,16 @@ namespace MyEmEx
             // InvokeRequired required compares the thread ID of the
             // calling thread to the thread ID of the creating thread.
             // If these threads are different, it returns true.
-            if (this.listView1.InvokeRequired)
+            if (listView1.InvokeRequired)
             {
                 AddEmailCallback d = new AddEmailCallback(AddEmail);
                 this.Invoke(d, new object[] { email });
             }
             else
             {
-                if (this.listView1.Items[email.ToLower()] == null)
+                if (listView1.Items[email.ToLower()] == null)
                 {
-                    ListViewItem lvi = new ListViewItem(email);
-                    lvi.ImageIndex = 0;
-                    lvi.Name = email.ToLower();
+                    ListViewItem lvi = new ListViewItem(email) {ImageIndex = 0, Name = email.ToLower()};
                     this.listView1.Items.Add(lvi);
                 }
             }
@@ -114,56 +104,62 @@ namespace MyEmEx
             ThreadProcArg arg = obj as ThreadProcArg;
 
 
-            String URL = @"";
+            String url = @"";
             int level = 0;
-            arg.semaphore2.WaitOne();
-            arg.This.GetUrl(arg.index, ref URL, ref level);
-            arg.semaphore2.Release();
-          
-            try
+            Debug.Assert(arg != null, "arg != null");
+            if (arg != null)
             {
-                HtmlWeb hw = new HtmlWeb();
-                HtmlAgilityPack.HtmlDocument doc = hw.Load(URL);
-
-                if (level != arg.maxLevel)
+                arg.Semaphore2.WaitOne();
+                arg.This.GetUrl(arg.Index, ref url, ref level);
+                arg.Semaphore2.Release();
+          
+                try
                 {
-                    Uri baseUri = new Uri(URL);
+                    HtmlWeb hw = new HtmlWeb();
+                    HtmlAgilityPack.HtmlDocument doc = hw.Load(url);
 
-                    foreach (HtmlAgilityPack.HtmlNode link in doc.DocumentNode.SelectNodes(@".//a[@href]"))
+                    if (level != arg.MaxLevel)
                     {
-                        HtmlAgilityPack.HtmlAttribute att = link.Attributes["href"];
-                        Uri uri = new Uri(baseUri, att.Value);
-                        String URL2 = uri.AbsoluteUri;
-                        arg.semaphore2.WaitOne();
-                        arg.This.AddUrl(URL2, level + 1);
-                        arg.semaphore2.Release();
+                        Uri baseUri = new Uri(url);
+
+                        foreach (HtmlAgilityPack.HtmlNode link in doc.DocumentNode.SelectNodes(@".//a[@href]"))
+                        {
+                            HtmlAgilityPack.HtmlAttribute att = link.Attributes["href"];
+                            Uri uri = new Uri(baseUri, att.Value);
+                            String url2 = uri.AbsoluteUri;
+                            arg.Semaphore2.WaitOne();
+                            arg.This.AddUrl(url2, level + 1);
+                            arg.Semaphore2.Release();
+                        }
+                    }
+
+                    String html = doc.DocumentNode.InnerHtml;
+                    const string patternEmail = @"\b[a-zAZ0-9]+([\.-][a-zAZ0-9]+)*@([a-zAZ0-9-]+\.)+[a-zA-Z]{2,6}\b";
+                    Regex rgxEmail = new Regex(patternEmail, RegexOptions.IgnoreCase | RegexOptions.Multiline);
+
+                    foreach (Match matchEmail in rgxEmail.Matches(html))
+                    {
+                        arg.Semaphore1.WaitOne();
+                        arg.This.AddEmail(matchEmail.Value);
+                        arg.Semaphore1.Release();
                     }
                 }
-
-                String html = doc.DocumentNode.InnerHtml;
-                String patternEmail = @"\b[a-zAZ0-9]+([\.-][a-zAZ0-9]+)*@([a-zAZ0-9-]+\.)+[a-zA-Z]{2,6}\b";
-                Regex rgxEmail = new Regex(patternEmail, RegexOptions.IgnoreCase | RegexOptions.Multiline);
-
-                foreach (Match matchEmail in rgxEmail.Matches(html))
+                catch
                 {
-                    arg.semaphore1.WaitOne();
-                    arg.This.AddEmail(matchEmail.Value);
-                    arg.semaphore1.Release();
                 }
-            }
-            catch
-            {
-            }
 
-            arg.semaphore0.Release();
+                arg.Semaphore0.Release();
+            }
             Debug.Print("End ThreadProc");
         }
 
         public ChildForm(int maxLevel, int maxThreads)
         {
+            _isRunning = false;
+            _index = 0;
             InitializeComponent();
             _maxLevel = maxLevel;
-            this._semaphore0 = new Semaphore(maxThreads, maxThreads);
+            _semaphore0 = new Semaphore(maxThreads, maxThreads);
         }
 
         private void webBrowser1_Navigating(object sender, WebBrowserNavigatingEventArgs e)
@@ -171,18 +167,15 @@ namespace MyEmEx
             if (_navigatingCountdown == 0)
             {
                 e.Cancel = true;
-                SHDocVw.InternetExplorer IE = new SHDocVw.InternetExplorer();
-                object Empty = null;
-                String URL = e.Url.ToString();
-                IE.Visible = true;
-                IE.Navigate(URL, ref Empty, ref Empty, ref Empty, ref Empty);
+                String url = e.Url.ToString();
+                Process.Start(url);
             }
         }
 
         private void childForm_Load(object sender, EventArgs e)
         {
-            this.listView1.SuspendLayout();
-            this.listView2.SuspendLayout();
+            listView1.SuspendLayout();
+            listView2.SuspendLayout();
         }
 
         public void StartWorker()
@@ -196,7 +189,7 @@ namespace MyEmEx
 
         public void StopWorker()
         {
-            if (_isRunning && backgroundWorker1.WorkerSupportsCancellation == true)
+            if (_isRunning && backgroundWorker1.WorkerSupportsCancellation)
             {
                 // Cancel the asynchronous operation.
                 backgroundWorker1.CancelAsync();
@@ -209,20 +202,20 @@ namespace MyEmEx
 
             BackgroundWorker worker = sender as BackgroundWorker;
 
-
-            while (worker.CancellationPending != true)
+            Debug.Assert(worker != null, "worker != null");
+            while (worker != null && worker.CancellationPending != true)
             {
-                if (_index < this.listView2.Items.Count)
+                if (_index < listView2.Items.Count)
                 {
-                    this._semaphore0.WaitOne();
+                    _semaphore0.WaitOne();
 
                     ThreadProcArg arg = new ThreadProcArg();
-                    arg.semaphore0 = this._semaphore0;
-                    arg.semaphore1 = this._semaphore1;
-                    arg.semaphore2 = this._semaphore2;
+                    arg.Semaphore0 = _semaphore0;
+                    arg.Semaphore1 = _semaphore1;
+                    arg.Semaphore2 = _semaphore2;
                     arg.This = this;
-                    arg.index = this._index;
-                    arg.maxLevel = this._maxLevel;
+                    arg.Index = _index;
+                    arg.MaxLevel = _maxLevel;
 
                     Thread t = new Thread(new ParameterizedThreadStart(ThreadProc));
                     t.Start(arg);
@@ -248,22 +241,22 @@ namespace MyEmEx
         public void SaveAs(String fileName)
         {
             StreamWriter outfile = new StreamWriter(fileName);
-            this._semaphore1.WaitOne();
-            foreach (ListViewItem lvi in this.listView1.Items)
+            _semaphore1.WaitOne();
+            foreach (ListViewItem lvi in listView1.Items)
             {
                 outfile.WriteLine(lvi.Text);
             }
-            this._semaphore1.Release();
+            _semaphore1.Release();
             outfile.Close();
         }
 
         private void timer1_Tick(object sender, EventArgs e)
         {
-            this.listView1.ResumeLayout();
-            this.listView2.ResumeLayout();
+            listView1.ResumeLayout();
+            listView2.ResumeLayout();
             Thread.Sleep(0);
-            this.listView1.SuspendLayout();
-            this.listView2.SuspendLayout();
+            listView1.SuspendLayout();
+            listView2.SuspendLayout();
         }
 
         private void webBrowser1_DocumentCompleted(object sender, WebBrowserDocumentCompletedEventArgs e)
