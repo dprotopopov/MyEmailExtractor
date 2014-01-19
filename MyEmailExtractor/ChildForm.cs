@@ -1,168 +1,196 @@
 ﻿using System;
-using System.ComponentModel;
+using System.Collections.Generic;
+using System.Linq;
 using System.Windows.Forms;
 using System.Threading;
-using System.Text.RegularExpressions;
 using System.Diagnostics;
 using System.IO;
-using HtmlAgilityPack;
 
 namespace MyEmEx
 {
     public partial class ChildForm : Form
     {
-        private class ThreadProcArg
+        private static readonly ReturnFieldInfos ReturnFieldInfos = new ReturnFieldInfos
         {
-            public Semaphore Semaphore0;
-            public Semaphore Semaphore1;
-            public Semaphore Semaphore2;
-            public ChildForm This;
-            public int Index;
-            public int MaxLevel;
+            new ReturnFieldInfo
+            {
+                ReturnFieldId = "Url",
+                ReturnFieldXpathTemplate = @"//a[@href]",
+                ReturnFieldResultTemplate = @"{{HrefValue}}",
+                ReturnFieldRegexPattern = @".*",
+                ReturnFieldRegexReplacement = @"$&",
+                ReturnFieldRegexSelect = @".+"
+            },
+            new ReturnFieldInfo
+            {
+                ReturnFieldId = "Email",
+                ReturnFieldXpathTemplate = @"//.",
+                ReturnFieldResultTemplate = @"{{InnerHtml}}",
+                ReturnFieldRegexPattern = @".*",
+                ReturnFieldRegexReplacement = @"$&",
+                ReturnFieldRegexSelect = @"\b[a-zAZ0-9]+([\.-][a-zAZ0-9]+)*@([a-zAZ0-9-]+\.)+[a-zA-Z]{2,6}\b"
+            }
+        };
+
+        readonly List<WebTask> _webTasks = new List<WebTask>();
+        readonly Dictionary<string, int> _webTasksIndex = new Dictionary<string, int>();
+
+        private int TotalRunning
+        {
+            get
+            {
+                return _webTasks.Count(task => task.Status == WebTask.WebTaskStatus.Running);
+            }
         }
 
-        private Semaphore _semaphore0;
-        private Semaphore _semaphore1 = new Semaphore(1, 1);
-        private Semaphore _semaphore2 = new Semaphore(1, 1);
-        private int _index;
-        private bool _isRunning;
+        private void StartAllTasks()
+        {
+            int toStart = MaxThreads - TotalRunning;
+            foreach (var task in _webTasks.Where(task => task.Status == WebTask.WebTaskStatus.Ready).Where(task => toStart-- > 0))
+                task.Start();
+        }
+        private void ResumeAllTasks()
+        {
+            int toStart = MaxThreads - TotalRunning;
+            foreach (var task in _webTasks.Where(task => task.Status == WebTask.WebTaskStatus.Paused).Where(task => toStart-- > 0))
+                task.Resume();
+        }
 
-        private int _maxLevel;
-        private int _navigatingCountdown = 3;
+        delegate void OnWebTask(WebTask task);
 
-        delegate void GetUrlCallback(int index, ref String url, ref int level);
-        delegate void AddUrlCallback(String url, int level);
-        delegate void AddEmailCallback(String email);
-
-        public void GetUrl(int index, ref String url, ref int level)
+        public void OnWebTaskDefault(WebTask task)
         {
             // InvokeRequired required compares the thread ID of the
             // calling thread to the thread ID of the creating thread.
             // If these threads are different, it returns true.
             if (listView2.InvokeRequired)
             {
-                GetUrlCallback d = new GetUrlCallback(GetUrl);
-                var arr = new object[] { index, url, level };
-                this.Invoke(d, arr);
-                url = (String)arr[1];
-                level = (int)arr[2];
-            }
-            else
-            {
-                ListViewItem lvi = listView2.Items[index];
-                url = lvi.Text;
-                level = Convert.ToInt32(lvi.SubItems[1].Text);
-                lvi.ImageIndex = 1;
-            }
-
-        }
-        public void AddUrl(String url, int level)
-        {
-            // InvokeRequired required compares the thread ID of the
-            // calling thread to the thread ID of the creating thread.
-            // If these threads are different, it returns true.
-            if (listView2.InvokeRequired)
-            {
-                AddUrlCallback d = new AddUrlCallback(AddUrl);
-                Invoke(d, new object[] { url, level });
-            }
-            else
-            {
-                if (listView2.Items[url.ToLower()] == null)
-                {
-                    ListViewItem lvi = new ListViewItem(url);
-                    lvi.ImageIndex = 0;
-                    lvi.Name = url.ToLower();
-                    lvi.SubItems.Add(Convert.ToString(level));
-                    listView2.Items.Add(lvi);
-                }
-            }
-        }
-        public void AddEmail(String email)
-        {
-            // InvokeRequired required compares the thread ID of the
-            // calling thread to the thread ID of the creating thread.
-            // If these threads are different, it returns true.
-            if (listView1.InvokeRequired)
-            {
-                AddEmailCallback d = new AddEmailCallback(AddEmail);
-                this.Invoke(d, new object[] { email });
-            }
-            else
-            {
-                if (listView1.Items[email.ToLower()] == null)
-                {
-                    ListViewItem lvi = new ListViewItem(email) {ImageIndex = 0, Name = email.ToLower()};
-                    this.listView1.Items.Add(lvi);
-                }
-            }
-        }
-
-        public static void ThreadProc(object obj)
-        {
-            Debug.Print("Start ThreadProc");
-            ThreadProcArg arg = obj as ThreadProcArg;
-
-
-            String url = @"";
-            int level = 0;
-            Debug.Assert(arg != null, "arg != null");
-            if (arg != null)
-            {
-                arg.Semaphore2.WaitOne();
-                arg.This.GetUrl(arg.Index, ref url, ref level);
-                arg.Semaphore2.Release();
-          
+                OnWebTask d = new OnWebTask(OnWebTaskDefault);
+                var arr = new object[] { task };
                 try
                 {
-                    HtmlWeb hw = new HtmlWeb();
-                    HtmlAgilityPack.HtmlDocument doc = hw.Load(url);
-
-                    if (level != arg.MaxLevel)
-                    {
-                        Uri baseUri = new Uri(url);
-
-                        foreach (HtmlAgilityPack.HtmlNode link in doc.DocumentNode.SelectNodes(@".//a[@href]"))
-                        {
-                            HtmlAgilityPack.HtmlAttribute att = link.Attributes["href"];
-                            Uri uri = new Uri(baseUri, att.Value);
-                            String url2 = uri.AbsoluteUri;
-                            arg.Semaphore2.WaitOne();
-                            arg.This.AddUrl(url2, level + 1);
-                            arg.Semaphore2.Release();
-                        }
-                    }
-
-                    String html = doc.DocumentNode.InnerHtml;
-                    const string patternEmail = @"\b[a-zAZ0-9]+([\.-][a-zAZ0-9]+)*@([a-zAZ0-9-]+\.)+[a-zA-Z]{2,6}\b";
-                    Regex rgxEmail = new Regex(patternEmail, RegexOptions.IgnoreCase | RegexOptions.Multiline);
-
-                    foreach (Match matchEmail in rgxEmail.Matches(html))
-                    {
-                        arg.Semaphore1.WaitOne();
-                        arg.This.AddEmail(matchEmail.Value);
-                        arg.Semaphore1.Release();
-                    }
+                    Invoke(d, arr);
                 }
-                catch
+                catch (Exception)
                 {
                 }
-
-                arg.Semaphore0.Release();
             }
-            Debug.Print("End ThreadProc");
+            else
+            {
+                Debug.Assert(listView2.Items.Count > task.Id);
+                ListView.ListViewItemCollection items = listView2.Items;
+                var lvi = items[task.Id];
+                if (lvi != null) lvi.ImageIndex = (int)task.Status;
+            }
         }
+
+        private readonly Object _thisLock = new Object();
+        public void AddTask(Uri uri, int level)
+        {
+            lock (_thisLock)
+            {
+                Debug.Assert(listView2.Items.Count == _webTasks.Count);
+                Debug.Assert(_webTasksIndex.Count == _webTasks.Count);
+                var newTask = new WebTask(_webTasks.Count, level)
+                {
+                    Url = uri.AbsoluteUri,
+                    Method = "GET",
+                    OnStartCallback = OnWebTaskDefault,
+                    OnAbortCallback = OnWebTaskDefault,
+                    OnResumeCallback = OnWebTaskDefault,
+                    OnErrorCallback = OnWebTaskDefault,
+                    OnCompliteCallback = OnWebTaskComplite,
+                    ReturnFieldInfos = ReturnFieldInfos
+                };
+                if (newTask.Level < MaxLevel && !_webTasksIndex.ContainsKey(newTask.ToString().ToLower()))
+                {
+                    _webTasks.Add(newTask);
+                    _webTasksIndex.Add(newTask.ToString().ToLower(), newTask.Id);
+                    ListViewItem viewItem = new ListViewItem(newTask.ToString())
+                    {
+                        ImageIndex = 0,
+                        Name = newTask.ToString().ToLower()
+                    };
+                    viewItem.SubItems.Add(Convert.ToString(newTask.Level));
+                    listView2.Items.Add(viewItem);
+                }
+            }
+        }
+        public void OnWebTaskComplite(WebTask task)
+        {
+            // InvokeRequired required compares the thread ID of the
+            // calling thread to the thread ID of the creating thread.
+            // If these threads are different, it returns true.
+            if (listView1.InvokeRequired || listView2.InvokeRequired)
+            {
+                OnWebTask d = new OnWebTask(OnWebTaskComplite);
+                var arr = new object[] { task };
+                try
+                {
+                    Invoke(d, arr);
+                }
+                catch (Exception)
+                {
+                }
+            }
+            else
+            {
+                OnWebTaskDefault(task);
+
+                foreach (var email in task.ReturnFields.Email.Where(email => listView1.Items[email.ToLower()] == null))
+                {
+                    listView1.Items.Add(new ListViewItem(email) { ImageIndex = 0, Name = email.ToLower() });
+                }
+                Uri baseUri = new Uri(task.Url);
+                foreach (Uri uri in task.ReturnFields.Url.Select(url => new Uri(baseUri, url)))
+                {
+                    AddTask(uri, task.Level + 1);
+                }
+            }
+        }
+
+        public void AddUrls(List<string> urlList)
+        {
+            foreach (Uri uri in urlList.Select(url => new Uri(url)))
+            {
+                AddTask(uri, 0);
+            }
+        }
+
+        private bool IsRunning
+        {
+            get
+            {
+                return timerLauncher.Enabled;
+            }
+            set
+            {
+                if (value)
+                {
+                    ResumeAllTasks();
+                    StartAllTasks();
+                    timerLauncher.Enabled = true;
+                }
+                else
+                {
+                    timerLauncher.Enabled = false;
+                }
+            }
+        }
+
+        private int MaxLevel { get; set; }
+        private int MaxThreads { get; set; }
+
+        private int _navigatingCountdown = 3;
 
         public ChildForm(int maxLevel, int maxThreads)
         {
-            _isRunning = false;
-            _index = 0;
             InitializeComponent();
-            _maxLevel = maxLevel;
-            _semaphore0 = new Semaphore(maxThreads, maxThreads);
+            MaxLevel = maxLevel;
+            MaxThreads = maxThreads;
         }
 
-        private void webBrowser1_Navigating(object sender, WebBrowserNavigatingEventArgs e)
+        private void NavigateToAdvert(object sender, WebBrowserNavigatingEventArgs e)
         {
             if (_navigatingCountdown == 0)
             {
@@ -180,77 +208,25 @@ namespace MyEmEx
 
         public void StartWorker()
         {
-            if (!_isRunning)
-            {
-                backgroundWorker1.RunWorkerAsync();
-                _isRunning = true;
-            }
+            IsRunning = true;
         }
 
         public void StopWorker()
         {
-            if (_isRunning && backgroundWorker1.WorkerSupportsCancellation)
-            {
-                // Cancel the asynchronous operation.
-                backgroundWorker1.CancelAsync();
-                _isRunning = false;
-            }
-        }
-
-        private void backgroundWorker1_DoWork(object sender, DoWorkEventArgs e)
-        {
-
-            BackgroundWorker worker = sender as BackgroundWorker;
-
-            Debug.Assert(worker != null, "worker != null");
-            while (worker != null && worker.CancellationPending != true)
-            {
-                if (_index < listView2.Items.Count)
-                {
-                    _semaphore0.WaitOne();
-
-                    ThreadProcArg arg = new ThreadProcArg();
-                    arg.Semaphore0 = _semaphore0;
-                    arg.Semaphore1 = _semaphore1;
-                    arg.Semaphore2 = _semaphore2;
-                    arg.This = this;
-                    arg.Index = _index;
-                    arg.MaxLevel = _maxLevel;
-
-                    Thread t = new Thread(new ParameterizedThreadStart(ThreadProc));
-                    t.Start(arg);
-                    _index++;
-                }
-                else
-                {
-                    Thread.Sleep(100);
-                }
-            }
-        }
-
-        private void backgroundWorker1_ProgressChanged(object sender, ProgressChangedEventArgs e)
-        {
-
-        }
-
-        private void backgroundWorker1_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
-        {
-            _isRunning = false;
+            IsRunning = false;
         }
 
         public void SaveAs(String fileName)
         {
             StreamWriter outfile = new StreamWriter(fileName);
-            _semaphore1.WaitOne();
             foreach (ListViewItem lvi in listView1.Items)
             {
                 outfile.WriteLine(lvi.Text);
             }
-            _semaphore1.Release();
             outfile.Close();
         }
 
-        private void timer1_Tick(object sender, EventArgs e)
+        private void ResumeSuspendLayout(object sender, EventArgs e)
         {
             listView1.ResumeLayout();
             listView2.ResumeLayout();
@@ -264,10 +240,54 @@ namespace MyEmEx
             _navigatingCountdown--;
         }
 
-        private void timer2_Tick(object sender, EventArgs e)
+        private void AdvertRefresh(object sender, EventArgs e)
         {
             _navigatingCountdown = 3;
-            this.webBrowser1.Refresh();
+            webBrowser1.Refresh();
+        }
+
+        private void timerLauncher_Tick(object sender, EventArgs e)
+        {
+            StartAllTasks();
+        }
+
+        public void AbortWorker()
+        {
+            AbortAllTasks();
+        }
+
+        private void AbortAllTasks()
+        {
+            foreach (var task in _webTasks.Where(task => task.Status == WebTask.WebTaskStatus.Running || task.Status == WebTask.WebTaskStatus.Paused))
+                task.Abort();
+        }
+
+        private void listView2_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            if (listView2.SelectedItems.Count == 1)
+            {
+                ListView.SelectedListViewItemCollection items = listView2.SelectedItems;
+                ListViewItem item = items[0];
+                int index = listView2.Items.IndexOf(item);
+                WebTask task = _webTasks[index];
+                string url = task.Url;
+                Process.Start(url);
+            }
+        }
+
+        private void listView1_DoubleClick(object sender, EventArgs e)
+        {
+            if (listView1.SelectedItems.Count == 1)
+            {
+                ListView.SelectedListViewItemCollection items = listView1.SelectedItems;
+                ListViewItem item = items[0];
+                Process.Start(@"mailto:" + item.Name);
+            }
+        }
+
+        private void ChildForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            AbortAllTasks();
         }
     }
 }

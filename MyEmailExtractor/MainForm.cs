@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Linq;
 using System.Windows.Forms;
 
 namespace MyEmEx
@@ -22,8 +23,7 @@ namespace MyEmEx
                     MdiParent = this
                 };
                 childForm.Show();
-                foreach(String line in _setupForm.Url.Lines)
-                    childForm.AddUrl(line, 0);
+                childForm.AddUrls(_setupForm.Url.Lines.ToList());
                 childForm.StartWorker();
             }
         }
@@ -60,8 +60,7 @@ namespace MyEmEx
                     MdiParent = this
                 };
                 childForm.Show();
-                foreach (String line in _setupForm.Url.Lines)
-                    childForm.AddUrl(line, 0);
+                childForm.AddUrls(_setupForm.Url.Lines.ToList());
                 childForm.StartWorker();
             }
         }
@@ -93,7 +92,7 @@ namespace MyEmEx
             {
                 ChildForm childForm = form as ChildForm;
                 Debug.Assert(childForm != null, "childForm != null");
-                if (childForm != null) childForm.StopWorker();
+                if (childForm != null) childForm.AbortWorker();
             }
             Close();
         }

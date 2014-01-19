@@ -94,7 +94,7 @@
             this.Threads.Name = "Threads";
             this.Threads.Size = new System.Drawing.Size(88, 23);
             this.Threads.TabIndex = 6;
-            this.Threads.Text = "8";
+            this.Threads.Text = "24";
             // 
             // label3
             // 

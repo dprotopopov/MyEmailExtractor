@@ -19,4 +19,3 @@ D:\Projects\MyEmailExtractor\MyEmailExtractor\obj\x86\Release\My Email Extractor
 D:\Projects\MyEmailExtractor\MyEmailExtractor\obj\x86\Release\My Email Extractor.pdb
 D:\Projects\MyEmailExtractor\MyEmailExtractor\obj\x86\Release\MyEmEx.AboutBox.resources
 D:\Projects\MyEmailExtractor\MyEmailExtractor\obj\x86\Release\My Email Extractor.exe.licenses
-D:\Projects\MyEmailExtractor\MyEmailExtractor\obj\x86\Release\MyEmailExtractor.csprojResolveAssemblyReference.cache
