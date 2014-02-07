@@ -5,10 +5,10 @@
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{C86E06C7-7161-4CE8-A652-B2307BD8B7BC}</ProjectGuid>
+    <ProjectGuid>{90B5E47A-F275-45D7-8A9E-9507A098309C}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>MyEmEx</RootNamespace>
+    <RootNamespace>MyEmailExtractor</RootNamespace>
     <AssemblyName>My Email Extractor</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <TargetFrameworkProfile>
@@ -33,12 +33,14 @@
     <PublisherName>ЭРБИЭЙ-ДИЗАЙН ООО</PublisherName>
     <CreateWebPageOnPublish>true</CreateWebPageOnPublish>
     <WebPage>publish.htm</WebPage>
-    <ApplicationRevision>15</ApplicationRevision>
+    <ApplicationRevision>16</ApplicationRevision>
     <ApplicationVersion>3.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <CreateDesktopShortcut>true</CreateDesktopShortcut>
     <PublishWizardCompleted>true</PublishWizardCompleted>
     <BootstrapperEnabled>true</BootstrapperEnabled>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\..\MyParserLibrary\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
     <PlatformTarget>x86</PlatformTarget>
@@ -62,7 +64,7 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup>
-    <StartupObject>MyEmEx.Program</StartupObject>
+    <StartupObject>MyEmailExtractor.Program</StartupObject>
   </PropertyGroup>
   <PropertyGroup>
     <ManifestCertificateThumbprint>A10A12302E191CCE1A46B2DB31D9DE74ABF05390</ManifestCertificateThumbprint>
@@ -86,6 +88,7 @@
     <Reference Include="DevExpress.BonusSkins.v13.2, Version=13.2.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
     <Reference Include="DevExpress.Data.v13.2, Version=13.2.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
     <Reference Include="DevExpress.Utils.v13.2, Version=13.2.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
+    <Reference Include="DevExpress.Xpf.Ribbon.v13.2, Version=13.2.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
     <Reference Include="DevExpress.XtraBars.v13.2, Version=13.2.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
     <Reference Include="DevExpress.XtraEditors.v13.2, Version=13.2.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
     <Reference Include="HtmlAgilityPack, Version=1.4.6.0, Culture=neutral, PublicKeyToken=bd319b19eaf3b43a, processorArchitecture=MSIL">
@@ -106,13 +109,6 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AboutBox.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="AboutBox.Designer.cs">
-      <DependentUpon>AboutBox.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Arguments.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -125,22 +121,14 @@
     <Compile Include="ChildForm.Designer.cs">
       <DependentUpon>ChildForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="MyEmExUtils.cs" />
-    <Compile Include="WebTask.cs" />
-    <Compile Include="ReturnFieldInfo.cs" />
-    <Compile Include="ReturnFieldInfos.cs" />
-    <Compile Include="ReturnFields.cs" />
-    <Compile Include="SetupForm.cs">
+    <Compile Include="StartupForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="SetupForm.Designer.cs">
-      <DependentUpon>SetupForm.cs</DependentUpon>
+    <Compile Include="StartupForm.Designer.cs">
+      <DependentUpon>StartupForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="AboutBox.resx">
-      <DependentUpon>AboutBox.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -148,8 +136,8 @@
       <DependentUpon>ChildForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\licenses.licx" />
-    <EmbeddedResource Include="SetupForm.resx">
-      <DependentUpon>SetupForm.cs</DependentUpon>
+    <EmbeddedResource Include="StartupForm.resx">
+      <DependentUpon>StartupForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -209,15 +197,6 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <None Include="New.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Start.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Stop.png" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Resources\wizard_32x321.png" />
     <None Include="Resources\wizard_16x16.png" />
     <None Include="Resources\wizard_32x32.png" />
@@ -230,9 +209,12 @@
     <Content Include="Resources\Email.png" />
     <None Include="Resources\info_32x32.png" />
     <None Include="Resources\info_16x16.png" />
+    <None Include="Resources\ide_32x32.png" />
+    <None Include="Resources\ide_16x16.png" />
     <Content Include="Resources\New.png" />
     <None Include="Resources\new_32x32.png" />
     <None Include="Resources\new_16x16.png" />
+    <None Include="Resources\operatingsystem_32x32.png" />
     <Content Include="Resources\Process.png" />
     <Content Include="Resources\Ready.png" />
     <Content Include="Resources\SaveAs.png" />
@@ -241,7 +223,34 @@
     <Content Include="Resources\Start.png" />
     <Content Include="Resources\Stop.png" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\MyParserLibrary\ManagedObject\ManagedObject.csproj">
+      <Project>{1129806c-1553-4531-9082-20ced890a25e}</Project>
+      <Name>ManagedObject</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\MyParserLibrary\MyParser.Library.Forms\MyParser.Library.Forms.csproj">
+      <Project>{ac201280-19c8-4355-9310-f2d86c0161da}</Project>
+      <Name>MyParser.Library.Forms</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\MyParserLibrary\MyParser.Library\MyParser.Library.csproj">
+      <Project>{9e1db17a-a1e7-416b-b080-0d78bc926816}</Project>
+      <Name>MyParser.Library</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\MyParserLibrary\MyParser.Managed\MyParser.Managed.csproj">
+      <Project>{47cd9cc8-1b0f-4597-8da9-26074a3c25d7}</Project>
+      <Name>MyParser.Managed</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\MyParserLibrary\MyParser.WebView\MyParser.WebView.csproj">
+      <Project>{b3bd0e99-1352-49b6-be33-6e13353e8be4}</Project>
+      <Name>MyParser.WebView</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\MyParserLibrary\MyWebSimulator\MyWebSimulator.csproj">
+      <Project>{5491733d-0fd2-45d2-9c5c-3a75810ea073}</Project>
+      <Name>MyWebSimulator</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

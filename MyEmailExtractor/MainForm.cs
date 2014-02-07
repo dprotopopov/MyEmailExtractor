@@ -1,106 +1,92 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Linq;
+using System.Reflection;
 using System.Windows.Forms;
+using DevExpress.XtraBars;
+using DevExpress.XtraBars.Ribbon;
+using MyParser.Library.Forms;
 
-namespace MyEmEx
+namespace MyEmailExtractor
 {
-    public partial class MainForm : DevExpress.XtraBars.Ribbon.RibbonForm
+    public partial class MainForm : RibbonForm
     {
-        readonly SetupForm _setupForm = new SetupForm();
+        private readonly ReturnFieldInfosDialog _returnFieldInfosDialog = new ReturnFieldInfosDialog
+        {
+            ReturnFieldInfos = ChildForm.ReturnFieldInfos
+        };
+
+        private readonly StartupForm _startupForm = new StartupForm();
+
         public MainForm()
         {
             InitializeComponent();
         }
 
-        private void New_Click(object sender, EventArgs e)
+        private void barButtonItem1_ItemClick(object sender, ItemClickEventArgs e)
         {
-
-            if (_setupForm.ShowDialog() == DialogResult.OK)
+            if (_startupForm.ShowDialog() == DialogResult.OK)
             {
-                ChildForm childForm = new ChildForm(Convert.ToInt32(_setupForm.Deep.Text), Convert.ToInt32(_setupForm.Threads.Text))
+                var childForm = new ChildForm
                 {
+                    MaxLevel = Convert.ToInt32(_startupForm.textBoxMaxLevel.Value),
+                    MaxThreads = Convert.ToInt32(_startupForm.textBoxMaxThreads.Value),
+                    Lines = _startupForm.textBoxUrl.Lines.ToList(),
                     MdiParent = this
                 };
                 childForm.Show();
-                childForm.AddUrls(_setupForm.Url.Lines.ToList());
+                childForm.GenerateTasks();
                 childForm.StartWorker();
             }
         }
 
-        private void Start_Click(object sender, EventArgs e)
+        private void barButtonItem2_ItemClick(object sender, ItemClickEventArgs e)
         {
-            ChildForm childForm = ActiveMdiChild as ChildForm;
-            if (childForm != null)
-                childForm.StartWorker();
-        }
-
-        private void Stop_Click(object sender, EventArgs e)
-        {
-            ChildForm childForm = ActiveMdiChild as ChildForm;
-            if (childForm != null)
-                childForm.StopWorker();
-        }
-
-        private void SaveAs_Click(object sender, EventArgs e)
-        {
-            ChildForm childForm = ActiveMdiChild as ChildForm;
-            if (childForm != null && saveFileDialog1.ShowDialog() == DialogResult.OK)
-            {
-                childForm.SaveAs(saveFileDialog1.FileName);
-            }
-        }
-
-        private void barButtonItem1_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
-        {
-            if (_setupForm.ShowDialog() == DialogResult.OK)
-            {
-                ChildForm childForm = new ChildForm(Convert.ToInt32(_setupForm.Deep.Text), Convert.ToInt32(_setupForm.Threads.Text))
-                {
-                    MdiParent = this
-                };
-                childForm.Show();
-                childForm.AddUrls(_setupForm.Url.Lines.ToList());
-                childForm.StartWorker();
-            }
-        }
-
-        private void barButtonItem2_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
-        {
-            ChildForm childForm = ActiveMdiChild as ChildForm;
+            var childForm = ActiveMdiChild as IChildForm;
             if (childForm != null) childForm.StartWorker();
         }
 
-        private void barButtonItem3_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+        private void barButtonItem3_ItemClick(object sender, ItemClickEventArgs e)
         {
-            ChildForm childForm = ActiveMdiChild as ChildForm;
+            var childForm = ActiveMdiChild as IChildForm;
             if (childForm != null) childForm.StopWorker();
         }
 
-        private void barButtonItem4_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+        private void barButtonItem4_ItemClick(object sender, ItemClickEventArgs e)
         {
-            ChildForm childForm = ActiveMdiChild as ChildForm;
+            var childForm = ActiveMdiChild as IChildForm;
             if (childForm != null && saveFileDialog1.ShowDialog() == DialogResult.OK)
             {
                 childForm.SaveAs(saveFileDialog1.FileName);
             }
         }
 
-        private void barButtonItem5_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+        private void barButtonItem5_ItemClick(object sender, ItemClickEventArgs e)
         {
             foreach (Form form in MdiChildren)
             {
-                ChildForm childForm = form as ChildForm;
+                var childForm = form as IChildForm;
                 Debug.Assert(childForm != null, "childForm != null");
                 if (childForm != null) childForm.AbortWorker();
             }
             Close();
         }
 
-        private void barButtonItem6_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+        private void barButtonItem6_ItemClick(object sender, ItemClickEventArgs e)
         {
-            AboutBox about = new AboutBox();
+            var about = new AboutBox { Assembly = Assembly.GetExecutingAssembly() };
             about.ShowDialog();
+        }
+
+        private void barButtonItem7_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            var childForm = ActiveMdiChild as IChildForm;
+            if (childForm != null) childForm.ShowAdvert();
+        }
+
+        private void barButtonItem8_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            _returnFieldInfosDialog.ShowDialog();
         }
     }
 }
