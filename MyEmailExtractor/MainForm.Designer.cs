@@ -28,27 +28,40 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
+            DevExpress.XtraSplashScreen.SplashScreenManager splashScreenManager1 = new DevExpress.XtraSplashScreen.SplashScreenManager(this, typeof(global::MyEmailExtractor.SplashScreen1), true, true);
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
+            DevExpress.XtraBars.Ribbon.GalleryItemGroup galleryItemGroup1 = new DevExpress.XtraBars.Ribbon.GalleryItemGroup();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
             this.formAssistant1 = new DevExpress.XtraBars.FormAssistant();
             this.ribbonControl1 = new DevExpress.XtraBars.Ribbon.RibbonControl();
-            this.applicationMenu1 = new DevExpress.XtraBars.Ribbon.ApplicationMenu(this.components);
-            this.barButtonItem1 = new DevExpress.XtraBars.BarButtonItem();
-            this.barButtonItem2 = new DevExpress.XtraBars.BarButtonItem();
-            this.barButtonItem3 = new DevExpress.XtraBars.BarButtonItem();
-            this.barButtonItem4 = new DevExpress.XtraBars.BarButtonItem();
-            this.barButtonItem5 = new DevExpress.XtraBars.BarButtonItem();
-            this.barButtonItem6 = new DevExpress.XtraBars.BarButtonItem();
+            this.applicationMenu1 = new DevExpress.XtraBars.Ribbon.ApplicationMenu();
+            this.barButtonItemSearch = new DevExpress.XtraBars.BarButtonItem();
+            this.barButtonItemStart = new DevExpress.XtraBars.BarButtonItem();
+            this.barButtonItemStop = new DevExpress.XtraBars.BarButtonItem();
+            this.barButtonItemSaveAs = new DevExpress.XtraBars.BarButtonItem();
+            this.barButtonItemExit = new DevExpress.XtraBars.BarButtonItem();
+            this.barButtonItemAbout = new DevExpress.XtraBars.BarButtonItem();
             this.barButtonItem7 = new DevExpress.XtraBars.BarButtonItem();
-            this.barButtonItem8 = new DevExpress.XtraBars.BarButtonItem();
+            this.barButtonItemSettings = new DevExpress.XtraBars.BarButtonItem();
+            this.barEditItemMaxThreads = new DevExpress.XtraBars.BarEditItem();
+            this.repositoryItemSpinEdit1 = new DevExpress.XtraEditors.Repository.RepositoryItemSpinEdit();
+            this.barEditItemMaxLevel = new DevExpress.XtraBars.BarEditItem();
+            this.repositoryItemSpinEdit2 = new DevExpress.XtraEditors.Repository.RepositoryItemSpinEdit();
+            this.barButtonItemLicenses = new DevExpress.XtraBars.BarButtonItem();
             this.ribbonPage1 = new DevExpress.XtraBars.Ribbon.RibbonPage();
             this.ribbonPageGroup1 = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
-            this.ribbonPageGroup2 = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
+            this.ribbonPageGroup4 = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
             this.ribbonPageGroup3 = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
+            this.ribbonPageGroup2 = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
             this.ribbonStatusBar1 = new DevExpress.XtraBars.Ribbon.RibbonStatusBar();
-            this.defaultLookAndFeel1 = new DevExpress.LookAndFeel.DefaultLookAndFeel(this.components);
+            this.defaultLookAndFeel1 = new DevExpress.LookAndFeel.DefaultLookAndFeel();
+            this.galleryDropDown1 = new DevExpress.XtraBars.Ribbon.GalleryDropDown();
+            this.ribbonGalleryBarItemSkin = new DevExpress.XtraBars.RibbonGalleryBarItem();
             ((System.ComponentModel.ISupportInitialize)(this.ribbonControl1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.applicationMenu1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.repositoryItemSpinEdit1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.repositoryItemSpinEdit2)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.galleryDropDown1)).BeginInit();
             this.SuspendLayout();
             // 
             // saveFileDialog1
@@ -63,88 +76,95 @@
             this.ribbonControl1.ExpandCollapseItem.Id = 0;
             this.ribbonControl1.Items.AddRange(new DevExpress.XtraBars.BarItem[] {
             this.ribbonControl1.ExpandCollapseItem,
-            this.barButtonItem1,
-            this.barButtonItem2,
-            this.barButtonItem3,
-            this.barButtonItem4,
-            this.barButtonItem5,
-            this.barButtonItem6,
+            this.barButtonItemSearch,
+            this.barButtonItemStart,
+            this.barButtonItemStop,
+            this.barButtonItemSaveAs,
+            this.barButtonItemExit,
+            this.barButtonItemAbout,
             this.barButtonItem7,
-            this.barButtonItem8});
+            this.barButtonItemSettings,
+            this.barEditItemMaxThreads,
+            this.barEditItemMaxLevel,
+            this.barButtonItemLicenses,
+            this.ribbonGalleryBarItemSkin});
             this.ribbonControl1.Location = new System.Drawing.Point(0, 0);
-            this.ribbonControl1.MaxItemId = 9;
+            this.ribbonControl1.MaxItemId = 2;
             this.ribbonControl1.Name = "ribbonControl1";
             this.ribbonControl1.Pages.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPage[] {
             this.ribbonPage1});
-            this.ribbonControl1.Size = new System.Drawing.Size(896, 158);
+            this.ribbonControl1.RepositoryItems.AddRange(new DevExpress.XtraEditors.Repository.RepositoryItem[] {
+            this.repositoryItemSpinEdit1,
+            this.repositoryItemSpinEdit2});
+            this.ribbonControl1.Size = new System.Drawing.Size(1064, 158);
             this.ribbonControl1.StatusBar = this.ribbonStatusBar1;
-            this.ribbonControl1.Toolbar.ItemLinks.Add(this.barButtonItem1);
-            this.ribbonControl1.Toolbar.ItemLinks.Add(this.barButtonItem4);
-            this.ribbonControl1.Toolbar.ItemLinks.Add(this.barButtonItem6);
+            this.ribbonControl1.Toolbar.ItemLinks.Add(this.barButtonItemSearch);
+            this.ribbonControl1.Toolbar.ItemLinks.Add(this.barButtonItemSaveAs);
+            this.ribbonControl1.Toolbar.ItemLinks.Add(this.barButtonItemAbout);
             // 
             // applicationMenu1
             // 
-            this.applicationMenu1.ItemLinks.Add(this.barButtonItem1);
-            this.applicationMenu1.ItemLinks.Add(this.barButtonItem2);
-            this.applicationMenu1.ItemLinks.Add(this.barButtonItem3);
-            this.applicationMenu1.ItemLinks.Add(this.barButtonItem4);
-            this.applicationMenu1.ItemLinks.Add(this.barButtonItem5);
+            this.applicationMenu1.ItemLinks.Add(this.barButtonItemSearch);
+            this.applicationMenu1.ItemLinks.Add(this.barButtonItemStart);
+            this.applicationMenu1.ItemLinks.Add(this.barButtonItemStop);
+            this.applicationMenu1.ItemLinks.Add(this.barButtonItemSaveAs);
+            this.applicationMenu1.ItemLinks.Add(this.barButtonItemExit);
             this.applicationMenu1.Name = "applicationMenu1";
             this.applicationMenu1.Ribbon = this.ribbonControl1;
             // 
-            // barButtonItem1
+            // barButtonItemSearch
             // 
-            this.barButtonItem1.Caption = "Новый поиск";
-            this.barButtonItem1.Glyph = global::MyEmailExtractor.Properties.Resources.wizard_32x32;
-            this.barButtonItem1.Id = 1;
-            this.barButtonItem1.LargeGlyph = global::MyEmailExtractor.Properties.Resources.wizard_32x32;
-            this.barButtonItem1.Name = "barButtonItem1";
-            this.barButtonItem1.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.barButtonItem1_ItemClick);
+            this.barButtonItemSearch.Caption = "Новый поиск";
+            this.barButtonItemSearch.Glyph = global::MyEmailExtractor.Properties.Resources.wizard_32x32;
+            this.barButtonItemSearch.Id = 1;
+            this.barButtonItemSearch.LargeGlyph = global::MyEmailExtractor.Properties.Resources.wizard_32x32;
+            this.barButtonItemSearch.Name = "barButtonItemSearch";
+            this.barButtonItemSearch.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.ShowWizardDialog);
             // 
-            // barButtonItem2
+            // barButtonItemStart
             // 
-            this.barButtonItem2.Caption = "Запустить загрузку";
-            this.barButtonItem2.Glyph = global::MyEmailExtractor.Properties.Resources.download_16x16;
-            this.barButtonItem2.Id = 2;
-            this.barButtonItem2.LargeGlyph = global::MyEmailExtractor.Properties.Resources.download_32x32;
-            this.barButtonItem2.Name = "barButtonItem2";
-            this.barButtonItem2.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.barButtonItem2_ItemClick);
+            this.barButtonItemStart.Caption = "Запустить загрузку";
+            this.barButtonItemStart.Glyph = global::MyEmailExtractor.Properties.Resources.download_16x16;
+            this.barButtonItemStart.Id = 2;
+            this.barButtonItemStart.LargeGlyph = global::MyEmailExtractor.Properties.Resources.download_32x32;
+            this.barButtonItemStart.Name = "barButtonItemStart";
+            this.barButtonItemStart.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.StartWorker);
             // 
-            // barButtonItem3
+            // barButtonItemStop
             // 
-            this.barButtonItem3.Caption = "Остановить загрузку";
-            this.barButtonItem3.Glyph = global::MyEmailExtractor.Properties.Resources.cancel_16x16;
-            this.barButtonItem3.Id = 3;
-            this.barButtonItem3.LargeGlyph = global::MyEmailExtractor.Properties.Resources.cancel_32x32;
-            this.barButtonItem3.Name = "barButtonItem3";
-            this.barButtonItem3.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.barButtonItem3_ItemClick);
+            this.barButtonItemStop.Caption = "Остановить загрузку";
+            this.barButtonItemStop.Glyph = global::MyEmailExtractor.Properties.Resources.cancel_16x16;
+            this.barButtonItemStop.Id = 3;
+            this.barButtonItemStop.LargeGlyph = global::MyEmailExtractor.Properties.Resources.cancel_32x32;
+            this.barButtonItemStop.Name = "barButtonItemStop";
+            this.barButtonItemStop.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.StopWorker);
             // 
-            // barButtonItem4
+            // barButtonItemSaveAs
             // 
-            this.barButtonItem4.Caption = "Сохранить результаты";
-            this.barButtonItem4.Glyph = global::MyEmailExtractor.Properties.Resources.saveas_16x16;
-            this.barButtonItem4.Id = 4;
-            this.barButtonItem4.LargeGlyph = global::MyEmailExtractor.Properties.Resources.saveas_32x32;
-            this.barButtonItem4.Name = "barButtonItem4";
-            this.barButtonItem4.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.barButtonItem4_ItemClick);
+            this.barButtonItemSaveAs.Caption = "Сохранить результаты";
+            this.barButtonItemSaveAs.Glyph = global::MyEmailExtractor.Properties.Resources.saveas_16x16;
+            this.barButtonItemSaveAs.Id = 4;
+            this.barButtonItemSaveAs.LargeGlyph = global::MyEmailExtractor.Properties.Resources.saveas_32x32;
+            this.barButtonItemSaveAs.Name = "barButtonItemSaveAs";
+            this.barButtonItemSaveAs.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.SaveAs);
             // 
-            // barButtonItem5
+            // barButtonItemExit
             // 
-            this.barButtonItem5.Caption = "Выход";
-            this.barButtonItem5.Glyph = global::MyEmailExtractor.Properties.Resources.close_16x16;
-            this.barButtonItem5.Id = 5;
-            this.barButtonItem5.LargeGlyph = global::MyEmailExtractor.Properties.Resources.close_32x32;
-            this.barButtonItem5.Name = "barButtonItem5";
-            this.barButtonItem5.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.barButtonItem5_ItemClick);
+            this.barButtonItemExit.Caption = "Выход";
+            this.barButtonItemExit.Glyph = global::MyEmailExtractor.Properties.Resources.close_16x16;
+            this.barButtonItemExit.Id = 5;
+            this.barButtonItemExit.LargeGlyph = global::MyEmailExtractor.Properties.Resources.close_32x32;
+            this.barButtonItemExit.Name = "barButtonItemExit";
+            this.barButtonItemExit.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.AbortWorker);
             // 
-            // barButtonItem6
+            // barButtonItemAbout
             // 
-            this.barButtonItem6.Caption = "О программе";
-            this.barButtonItem6.Glyph = global::MyEmailExtractor.Properties.Resources.info_16x16;
-            this.barButtonItem6.Id = 6;
-            this.barButtonItem6.LargeGlyph = global::MyEmailExtractor.Properties.Resources.info_32x32;
-            this.barButtonItem6.Name = "barButtonItem6";
-            this.barButtonItem6.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.barButtonItem6_ItemClick);
+            this.barButtonItemAbout.Caption = "О программе";
+            this.barButtonItemAbout.Glyph = global::MyEmailExtractor.Properties.Resources.info_16x16;
+            this.barButtonItemAbout.Id = 6;
+            this.barButtonItemAbout.LargeGlyph = global::MyEmailExtractor.Properties.Resources.info_32x32;
+            this.barButtonItemAbout.Name = "barButtonItemAbout";
+            this.barButtonItemAbout.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.ShowAboutBox);
             // 
             // barButtonItem7
             // 
@@ -152,64 +172,168 @@
             this.barButtonItem7.Id = 7;
             this.barButtonItem7.LargeGlyph = global::MyEmailExtractor.Properties.Resources.operatingsystem_32x32;
             this.barButtonItem7.Name = "barButtonItem7";
-            this.barButtonItem7.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.barButtonItem7_ItemClick);
+            this.barButtonItem7.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.ShowAdvertisement);
             // 
-            // barButtonItem8
+            // barButtonItemSettings
             // 
-            this.barButtonItem8.Caption = "Конфигурация";
-            this.barButtonItem8.Id = 8;
-            this.barButtonItem8.LargeGlyph = global::MyEmailExtractor.Properties.Resources.operatingsystem_32x32;
-            this.barButtonItem8.Name = "barButtonItem8";
-            this.barButtonItem8.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.barButtonItem8_ItemClick);
+            this.barButtonItemSettings.Caption = "Конфигурация";
+            this.barButtonItemSettings.Id = 8;
+            this.barButtonItemSettings.LargeGlyph = global::MyEmailExtractor.Properties.Resources.operatingsystem_32x32;
+            this.barButtonItemSettings.Name = "barButtonItemSettings";
+            this.barButtonItemSettings.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.ShowFieldInfosDialog);
+            // 
+            // barEditItemMaxThreads
+            // 
+            this.barEditItemMaxThreads.Caption = "Количество потоков";
+            this.barEditItemMaxThreads.Edit = this.repositoryItemSpinEdit1;
+            this.barEditItemMaxThreads.Glyph = ((System.Drawing.Image)(resources.GetObject("barEditItemMaxThreads.Glyph")));
+            this.barEditItemMaxThreads.Id = 9;
+            this.barEditItemMaxThreads.LargeGlyph = ((System.Drawing.Image)(resources.GetObject("barEditItemMaxThreads.LargeGlyph")));
+            this.barEditItemMaxThreads.Name = "barEditItemMaxThreads";
+            this.barEditItemMaxThreads.Width = 80;
+            this.barEditItemMaxThreads.EditValueChanged += new System.EventHandler(this.barEditItemMaxThreads_EditValueChanged);
+            // 
+            // repositoryItemSpinEdit1
+            // 
+            this.repositoryItemSpinEdit1.AutoHeight = false;
+            this.repositoryItemSpinEdit1.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
+            this.repositoryItemSpinEdit1.Increment = new decimal(new int[] {
+            8,
+            0,
+            0,
+            0});
+            this.repositoryItemSpinEdit1.IsFloatValue = false;
+            this.repositoryItemSpinEdit1.Mask.EditMask = "N00";
+            this.repositoryItemSpinEdit1.MaxValue = new decimal(new int[] {
+            256,
+            0,
+            0,
+            0});
+            this.repositoryItemSpinEdit1.MinValue = new decimal(new int[] {
+            8,
+            0,
+            0,
+            0});
+            this.repositoryItemSpinEdit1.Name = "repositoryItemSpinEdit1";
+            this.repositoryItemSpinEdit1.SpinStyle = DevExpress.XtraEditors.Controls.SpinStyles.Horizontal;
+            // 
+            // barEditItemMaxLevel
+            // 
+            this.barEditItemMaxLevel.Caption = "Максимальный уровень";
+            this.barEditItemMaxLevel.Edit = this.repositoryItemSpinEdit2;
+            this.barEditItemMaxLevel.Glyph = ((System.Drawing.Image)(resources.GetObject("barEditItemMaxLevel.Glyph")));
+            this.barEditItemMaxLevel.Id = 10;
+            this.barEditItemMaxLevel.LargeGlyph = ((System.Drawing.Image)(resources.GetObject("barEditItemMaxLevel.LargeGlyph")));
+            this.barEditItemMaxLevel.Name = "barEditItemMaxLevel";
+            this.barEditItemMaxLevel.Width = 80;
+            this.barEditItemMaxLevel.EditValueChanged += new System.EventHandler(this.barEditItemMaxLevel_EditValueChanged);
+            // 
+            // repositoryItemSpinEdit2
+            // 
+            this.repositoryItemSpinEdit2.AutoHeight = false;
+            this.repositoryItemSpinEdit2.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
+            this.repositoryItemSpinEdit2.MaxValue = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
+            this.repositoryItemSpinEdit2.MinValue = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.repositoryItemSpinEdit2.Name = "repositoryItemSpinEdit2";
+            this.repositoryItemSpinEdit2.SpinStyle = DevExpress.XtraEditors.Controls.SpinStyles.Horizontal;
+            // 
+            // barButtonItemLicenses
+            // 
+            this.barButtonItemLicenses.Caption = "Регистрация";
+            this.barButtonItemLicenses.Glyph = ((System.Drawing.Image)(resources.GetObject("barButtonItemLicenses.Glyph")));
+            this.barButtonItemLicenses.Id = 11;
+            this.barButtonItemLicenses.LargeGlyph = ((System.Drawing.Image)(resources.GetObject("barButtonItemLicenses.LargeGlyph")));
+            this.barButtonItemLicenses.Name = "barButtonItemLicenses";
+            this.barButtonItemLicenses.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.barButtonItem9_ItemClick);
             // 
             // ribbonPage1
             // 
             this.ribbonPage1.Groups.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPageGroup[] {
             this.ribbonPageGroup1,
-            this.ribbonPageGroup2,
-            this.ribbonPageGroup3});
+            this.ribbonPageGroup4,
+            this.ribbonPageGroup3,
+            this.ribbonPageGroup2});
             this.ribbonPage1.Name = "ribbonPage1";
             this.ribbonPage1.Text = "Главная";
             // 
             // ribbonPageGroup1
             // 
-            this.ribbonPageGroup1.ItemLinks.Add(this.barButtonItem1);
-            this.ribbonPageGroup1.ItemLinks.Add(this.barButtonItem2);
-            this.ribbonPageGroup1.ItemLinks.Add(this.barButtonItem3);
-            this.ribbonPageGroup1.ItemLinks.Add(this.barButtonItem4);
+            this.ribbonPageGroup1.Glyph = ((System.Drawing.Image)(resources.GetObject("ribbonPageGroup1.Glyph")));
+            this.ribbonPageGroup1.ItemLinks.Add(this.barButtonItemSearch);
+            this.ribbonPageGroup1.ItemLinks.Add(this.barButtonItemStart);
+            this.ribbonPageGroup1.ItemLinks.Add(this.barButtonItemStop);
+            this.ribbonPageGroup1.ItemLinks.Add(this.barButtonItemSaveAs);
             this.ribbonPageGroup1.Name = "ribbonPageGroup1";
             this.ribbonPageGroup1.Text = "Поиск";
             // 
-            // ribbonPageGroup2
+            // ribbonPageGroup4
             // 
-            this.ribbonPageGroup2.ItemLinks.Add(this.barButtonItem5);
-            this.ribbonPageGroup2.Name = "ribbonPageGroup2";
-            this.ribbonPageGroup2.Text = "Выход";
+            this.ribbonPageGroup4.Glyph = ((System.Drawing.Image)(resources.GetObject("ribbonPageGroup4.Glyph")));
+            this.ribbonPageGroup4.ItemLinks.Add(this.barButtonItemSettings);
+            this.ribbonPageGroup4.ItemLinks.Add(this.barEditItemMaxThreads);
+            this.ribbonPageGroup4.ItemLinks.Add(this.barEditItemMaxLevel);
+            this.ribbonPageGroup4.Name = "ribbonPageGroup4";
+            this.ribbonPageGroup4.Text = "Настройки";
             // 
             // ribbonPageGroup3
             // 
-            this.ribbonPageGroup3.ItemLinks.Add(this.barButtonItem8);
+            this.ribbonPageGroup3.Glyph = ((System.Drawing.Image)(resources.GetObject("ribbonPageGroup3.Glyph")));
             this.ribbonPageGroup3.ItemLinks.Add(this.barButtonItem7);
-            this.ribbonPageGroup3.ItemLinks.Add(this.barButtonItem6);
+            this.ribbonPageGroup3.ItemLinks.Add(this.barButtonItemLicenses);
+            this.ribbonPageGroup3.ItemLinks.Add(this.barButtonItemAbout);
+            this.ribbonPageGroup3.ItemLinks.Add(this.ribbonGalleryBarItemSkin);
             this.ribbonPageGroup3.Name = "ribbonPageGroup3";
             this.ribbonPageGroup3.Text = "Помощь";
             // 
+            // ribbonPageGroup2
+            // 
+            this.ribbonPageGroup2.ItemLinks.Add(this.barButtonItemExit);
+            this.ribbonPageGroup2.Name = "ribbonPageGroup2";
+            this.ribbonPageGroup2.Text = "Выход";
+            // 
             // ribbonStatusBar1
             // 
-            this.ribbonStatusBar1.Location = new System.Drawing.Point(0, 578);
+            this.ribbonStatusBar1.Location = new System.Drawing.Point(0, 672);
             this.ribbonStatusBar1.Name = "ribbonStatusBar1";
             this.ribbonStatusBar1.Ribbon = this.ribbonControl1;
-            this.ribbonStatusBar1.Size = new System.Drawing.Size(896, 28);
+            this.ribbonStatusBar1.Size = new System.Drawing.Size(1064, 27);
             // 
             // defaultLookAndFeel1
             // 
-            this.defaultLookAndFeel1.LookAndFeel.SkinName = "Sharp Plus";
+            this.defaultLookAndFeel1.LookAndFeel.SkinName = "Visual Studio 2013 Light";
+            // 
+            // galleryDropDown1
+            // 
+            // 
+            // 
+            // 
+            galleryItemGroup1.Caption = "Group1";
+            this.galleryDropDown1.Gallery.Groups.AddRange(new DevExpress.XtraBars.Ribbon.GalleryItemGroup[] {
+            galleryItemGroup1});
+            this.galleryDropDown1.Name = "galleryDropDown1";
+            this.galleryDropDown1.Ribbon = this.ribbonControl1;
+            // 
+            // ribbonGalleryBarItemSkin
+            // 
+            this.ribbonGalleryBarItemSkin.Caption = "ribbonGalleryBarItemSkin";
+            this.ribbonGalleryBarItemSkin.Id = 1;
+            this.ribbonGalleryBarItemSkin.Name = "ribbonGalleryBarItemSkin";
             // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(896, 606);
+            this.ClientSize = new System.Drawing.Size(1064, 699);
             this.Controls.Add(this.ribbonStatusBar1);
             this.Controls.Add(this.ribbonControl1);
             this.IsMdiContainer = true;
@@ -219,9 +343,15 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.StatusBar = this.ribbonStatusBar1;
             this.Text = "My Email Extractor";
+            this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
+            this.Load += new System.EventHandler(this.MainForm_Load);
             ((System.ComponentModel.ISupportInitialize)(this.ribbonControl1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.applicationMenu1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.repositoryItemSpinEdit1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.repositoryItemSpinEdit2)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.galleryDropDown1)).EndInit();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -235,16 +365,24 @@
         private DevExpress.XtraBars.Ribbon.RibbonStatusBar ribbonStatusBar1;
         private DevExpress.XtraBars.Ribbon.ApplicationMenu applicationMenu1;
         private DevExpress.LookAndFeel.DefaultLookAndFeel defaultLookAndFeel1;
-        private DevExpress.XtraBars.BarButtonItem barButtonItem1;
-        private DevExpress.XtraBars.BarButtonItem barButtonItem2;
-        private DevExpress.XtraBars.BarButtonItem barButtonItem3;
-        private DevExpress.XtraBars.BarButtonItem barButtonItem4;
-        private DevExpress.XtraBars.BarButtonItem barButtonItem5;
+        private DevExpress.XtraBars.BarButtonItem barButtonItemSearch;
+        private DevExpress.XtraBars.BarButtonItem barButtonItemStart;
+        private DevExpress.XtraBars.BarButtonItem barButtonItemStop;
+        private DevExpress.XtraBars.BarButtonItem barButtonItemSaveAs;
+        private DevExpress.XtraBars.BarButtonItem barButtonItemExit;
         private DevExpress.XtraBars.Ribbon.RibbonPageGroup ribbonPageGroup2;
         private DevExpress.XtraBars.Ribbon.RibbonPageGroup ribbonPageGroup3;
-        private DevExpress.XtraBars.BarButtonItem barButtonItem6;
+        private DevExpress.XtraBars.BarButtonItem barButtonItemAbout;
         private DevExpress.XtraBars.BarButtonItem barButtonItem7;
-        private DevExpress.XtraBars.BarButtonItem barButtonItem8;
+        private DevExpress.XtraBars.BarButtonItem barButtonItemSettings;
+        private DevExpress.XtraBars.Ribbon.RibbonPageGroup ribbonPageGroup4;
+        private DevExpress.XtraBars.BarEditItem barEditItemMaxThreads;
+        private DevExpress.XtraEditors.Repository.RepositoryItemSpinEdit repositoryItemSpinEdit1;
+        private DevExpress.XtraBars.BarEditItem barEditItemMaxLevel;
+        private DevExpress.XtraEditors.Repository.RepositoryItemSpinEdit repositoryItemSpinEdit2;
+        private DevExpress.XtraBars.BarButtonItem barButtonItemLicenses;
+        private DevExpress.XtraBars.Ribbon.GalleryDropDown galleryDropDown1;
+        private DevExpress.XtraBars.RibbonGalleryBarItem ribbonGalleryBarItemSkin;
      }
 }
 

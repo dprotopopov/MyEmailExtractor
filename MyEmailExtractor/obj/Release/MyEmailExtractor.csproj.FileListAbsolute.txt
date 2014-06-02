@@ -1,0 +1,35 @@
+D:\Projects\MyEmailExtractor\MyEmailExtractor\bin\Release\libtidy.dll
+D:\Projects\MyEmailExtractor\MyEmailExtractor\bin\Release\My Email Extractor.exe.config
+D:\Projects\MyEmailExtractor\MyEmailExtractor\bin\Release\My Email Extractor.exe
+D:\Projects\MyEmailExtractor\MyEmailExtractor\bin\Release\My Email Extractor.pdb
+D:\Projects\MyEmailExtractor\MyEmailExtractor\bin\Release\MyLibrary.dll
+D:\Projects\MyEmailExtractor\MyEmailExtractor\bin\Release\MyParser.dll
+D:\Projects\MyEmailExtractor\MyEmailExtractor\bin\Release\MyParser.Forms.dll
+D:\Projects\MyEmailExtractor\MyEmailExtractor\bin\Release\MyProtector.dll
+D:\Projects\MyEmailExtractor\MyEmailExtractor\bin\Release\MyProtector.Forms.dll
+D:\Projects\MyEmailExtractor\MyEmailExtractor\bin\Release\SKGL.dll
+D:\Projects\MyEmailExtractor\MyEmailExtractor\bin\Release\TidyManaged.dll
+D:\Projects\MyEmailExtractor\MyEmailExtractor\bin\Release\System.Data.SQLite.dll
+D:\Projects\MyEmailExtractor\MyEmailExtractor\bin\Release\HtmlAgilityPack.dll
+D:\Projects\MyEmailExtractor\MyEmailExtractor\bin\Release\ICSharpCode.SharpZipLib.dll
+D:\Projects\MyEmailExtractor\MyEmailExtractor\bin\Release\EntityFramework.dll
+D:\Projects\MyEmailExtractor\MyEmailExtractor\bin\Release\MyLibrary.pdb
+D:\Projects\MyEmailExtractor\MyEmailExtractor\bin\Release\MyParser.Forms.pdb
+D:\Projects\MyEmailExtractor\MyEmailExtractor\bin\Release\MyParser.pdb
+D:\Projects\MyEmailExtractor\MyEmailExtractor\bin\Release\MyProtector.Forms.pdb
+D:\Projects\MyEmailExtractor\MyEmailExtractor\bin\Release\MyProtector.pdb
+D:\Projects\MyEmailExtractor\MyEmailExtractor\bin\Release\SKGL.pdb
+D:\Projects\MyEmailExtractor\MyEmailExtractor\bin\Release\TidyManaged.xml
+D:\Projects\MyEmailExtractor\MyEmailExtractor\bin\Release\System.Data.SQLite.xml
+D:\Projects\MyEmailExtractor\MyEmailExtractor\bin\Release\HtmlAgilityPack.pdb
+D:\Projects\MyEmailExtractor\MyEmailExtractor\bin\Release\HtmlAgilityPack.xml
+D:\Projects\MyEmailExtractor\MyEmailExtractor\bin\Release\EntityFramework.xml
+D:\Projects\MyEmailExtractor\MyEmailExtractor\obj\Release\MyEmailExtractor.csprojResolveAssemblyReference.cache
+D:\Projects\MyEmailExtractor\MyEmailExtractor\obj\Release\MyEmailExtractor.MainForm.resources
+D:\Projects\MyEmailExtractor\MyEmailExtractor\obj\Release\MyEmailExtractor.ChildForm.resources
+D:\Projects\MyEmailExtractor\MyEmailExtractor\obj\Release\MyEmailExtractor.StartupForm.resources
+D:\Projects\MyEmailExtractor\MyEmailExtractor\obj\Release\MyEmailExtractor.Properties.Resources.resources
+D:\Projects\MyEmailExtractor\MyEmailExtractor\obj\Release\MyEmailExtractor.csproj.GenerateResource.Cache
+D:\Projects\MyEmailExtractor\MyEmailExtractor\obj\Release\My Email Extractor.exe.licenses
+D:\Projects\MyEmailExtractor\MyEmailExtractor\obj\Release\My Email Extractor.exe
+D:\Projects\MyEmailExtractor\MyEmailExtractor\obj\Release\My Email Extractor.pdb

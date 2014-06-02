@@ -3,18 +3,20 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Threading;
 using System.Windows.Forms;
 using DevExpress.XtraEditors;
-using MyParser.Library;
-using MyParser.Library.Forms;
-using MyParser.Managed;
-using MyWebSimulator;
+using MyLibrary.Trace;
+using MyParser;
+using MyParser.Forms;
+using MyParser.ItemView;
+using MyParser.WebSessions;
+using MyParser.WebTasks;
+using MyProtector;
 
 namespace MyEmailExtractor
 {
-    public partial class ChildForm : XtraForm, IChildForm
+    public partial class ChildForm : XtraForm, IChildForm<WebTaskView, WebSessionView, EmailView>, ISettings
     {
         public static readonly ReturnFieldInfos ReturnFieldInfos = new ReturnFieldInfos
         {
@@ -22,112 +24,412 @@ namespace MyEmailExtractor
             Defaults.ReturnFieldInfos.Email,
         };
 
-        private int _navigatingCountdown = 3;
+        private readonly Object _progress = new Object();
 
         public ChildForm()
         {
             InitializeComponent();
-            WebTaskManager = new WebTaskManager {ListView = listViewQueue};
-            WebSimulator = new WebSimulator {WebBrowser = new ManagedWebBrowser(webBrowser1)};
-        }
-
-        public List<string> Lines { get; set; }
-
-        public IWebTaskManager WebTaskManager { get; set; }
-        public IWebSimulator WebSimulator { get; set; }
-
-        public object LastError { get; set; }
-
-        public bool IsRunning
-        {
-            get { return timerLauncher.Enabled; }
-            set
+            Current = 0;
+            Total = 0;
+            DataGridViewTaskManager = new DataGridViewTaskManager<WebTaskView>
             {
-                if (value)
-                {
-                    WebTaskManager.ResumeAllTasks();
-                    WebTaskManager.StartAllTasks();
-                    timerLauncher.Enabled = true;
-                }
-                else
-                {
-                    timerLauncher.Enabled = false;
-                }
-            }
+                DataGridView = dataGridViewQueue,
+                ChildForm = this,
+            };
+            DataGridViewResultManager = new DataGridViewResultManager<EmailView>
+            {
+                DataGridView = dataGridViewEmail,
+                ChildForm = this,
+            };
+            dataGridViewQueue.DataSource = DataGridViewTaskManager.Items;
+            dataGridViewEmail.DataSource = DataGridViewResultManager.Items;
+            Application.Idle += (sender, e) => IdleLauncher(sender, e);
+            Application.Idle += (sender, e) => IdleUpdate(sender, e);
+            Application.Idle += (sender, e) => Thread.Yield();
         }
+
+        public ISettings Settings { get; set; }
+
+        private long Current { get; set; }
+        private long Total { get; set; }
+        public List<string> Lines { get; set; }
+        public DataGridViewResultManager<EmailView> DataGridViewResultManager { get; set; }
+        public DataGridViewSessionManager<WebSessionView> DataGridViewSessionManager { get; set; }
+        public DataGridViewTaskManager<WebTaskView> DataGridViewTaskManager { get; set; }
+        public object LastError { get; set; }
+        public TimeSpan Timeout { get; set; }
+
+        public bool IsRunning { get; set; }
 
         public int MaxLevel
         {
-            get { return WebTaskManager.MaxLevel; }
-            set { WebTaskManager.MaxLevel = value; }
+            get { return DataGridViewTaskManager.MaxLevel; }
+            set { DataGridViewTaskManager.MaxLevel = value; }
         }
 
         public int MaxThreads
         {
-            get { return WebTaskManager.MaxThreads; }
-            set { WebTaskManager.MaxThreads = value; }
+            get { return DataGridViewTaskManager.MaxThreads; }
+            set { DataGridViewTaskManager.MaxThreads = value; }
         }
+
+        public int MaxSessions
+        {
+            get { return DataGridViewSessionManager.MaxSessions; }
+            set { DataGridViewSessionManager.MaxSessions = value; }
+        }
+
+        public bool UseRandomProxy { get; set; }
 
         public void GenerateTasks()
         {
-            Debug.Assert(Lines != null, "Lines != null");
             foreach (Uri uri in Lines.Select(url => new Uri(url)))
             {
                 try
                 {
-                    Debug.Assert(WebTaskManager != null, "WebTaskManager != null");
-                    IWebTask newTask = WebTaskManager.AddTask(new WebTask
+                    var webSession = new WebSession();
+                    AddTask(new WebTask
                     {
                         Url = uri.ToString(),
+                        Level = 0,
                         OnStartCallback = OnWebTaskDefault,
                         OnAbortCallback = OnWebTaskDefault,
                         OnResumeCallback = OnWebTaskDefault,
                         OnErrorCallback = OnWebTaskDefault,
+                        OnSuspendCallback = OnWebTaskDefault,
                         OnCompliteCallback = OnWebTaskComplite,
-                        ReturnFieldInfos = ReturnFieldInfos
+                        ReturnFieldInfos = ReturnFieldInfos,
+                        WebSession = webSession,
                     });
-                    Debug.WriteLine(newTask.ToString());
+                    Application.DoEvents();
+                    Thread.Yield();
                 }
                 catch (Exception exception)
                 {
                     LastError = exception;
-                    Debug.WriteLine(MethodBase.GetCurrentMethod().Name + ":" + LastError);
+                }
+                finally
+                {
                 }
             }
         }
 
-        public void StartWorker()
+        public void LoadFrom(string fileName)
         {
-            IsRunning = true;
+            throw new NotImplementedException();
         }
 
-        public void StopWorker()
+        public void OnWebSessionDefault(IWebSession webSession)
         {
-            IsRunning = false;
-        }
-
-        public void ShowAdvert()
-        {
-            WebSimulator.Click(@"//*");
-        }
-
-        public void AbortWorker()
-        {
-            WebTaskManager.AbortAllTasks();
+            throw new NotImplementedException();
         }
 
         public void OnWebTaskDefault(IWebTask webTask)
         {
-            OnWebTaskDelegate d = WebTaskManager.OnWebTaskDefault;
-            object[] arr = {webTask};
-            try
+            // InvokeRequired required compares the thread ID of the
+            // calling thread to the thread ID of the creating thread.
+            // If these threads are different, it returns true.
+            if (DataGridViewTaskManager.DataGridView.InvokeRequired)
             {
+                OnWebTaskCallbackDelegate d = OnWebTaskDefault;
+                object[] arr = {webTask};
                 Invoke(d, arr);
             }
-            catch (Exception exception)
+            else
+                try
+                {
+                    DataGridViewTaskManager.Wait(DataGridViewTaskManager.Items);
+                    DataGridViewTaskManager.OnWebTaskDefault(webTask);
+                    Application.DoEvents();
+                    Thread.Yield();
+                }
+                finally
+                {
+                    // Whether or not the exception was thrown, the current 
+                    // thread owns the mutex, and must release it. 
+                    DataGridViewTaskManager.Release(DataGridViewTaskManager.Items);
+                }
+        }
+
+
+        public void OnWebTaskCompliteOrError(IWebTask webTask)
+        {
+            Application.DoEvents();
+        }
+
+        /// <summary>
+        ///     Добавление новой задачи в очередь
+        ///     InvokeRequired required compares the thread ID of the
+        ///     calling thread to the thread ID of the creating thread.
+        ///     If these threads are different, it returns true.
+        /// </summary>
+        /// <returns></returns>
+        public IWebTask AddTask(IWebTask webTask)
+        {
+            if (DataGridViewTaskManager.DataGridView.InvokeRequired)
             {
-                LastError = exception;
-                Debug.WriteLine(MethodBase.GetCurrentMethod().Name + ":" + LastError);
+                AddTaskDelegate d = AddTask;
+                object[] arr = {webTask};
+                webTask = (IWebTask) Invoke(d, arr);
+            }
+            else
+                try
+                {
+                    DataGridViewTaskManager.Wait(DataGridViewTaskManager.Items);
+                    lock (_progress) ProgressCallback(Current, Total++);
+                    webTask = DataGridViewTaskManager.AddTask(webTask);
+                    Application.DoEvents();
+                    Thread.Yield();
+                }
+                catch (Exception exception)
+                {
+                    lock (_progress) ProgressCallback(Current, --Total);
+                    LastError = exception;
+                }
+                finally
+                {
+                    // Whether or not the exception was thrown, the current 
+                    // thread owns the mutex, and must release it. 
+                    DataGridViewTaskManager.Release(DataGridViewTaskManager.Items);
+                }
+            return webTask;
+        }
+
+        public void RemoveTask(IWebTask newTask)
+        {
+            if (DataGridViewTaskManager.DataGridView.InvokeRequired)
+            {
+                RemoveTaskDelegate d = RemoveTask;
+                object[] arr = {newTask};
+                Invoke(d, arr);
+            }
+            else
+                try
+                {
+                    DataGridViewTaskManager.Wait(DataGridViewTaskManager.Items);
+                    DataGridViewTaskManager.RemoveTask(newTask);
+                    Application.DoEvents();
+                    Thread.Yield();
+                }
+                catch (Exception exception)
+                {
+                    LastError = exception;
+                }
+                finally
+                {
+                    // Whether or not the exception was thrown, the current 
+                    // thread owns the mutex, and must release it. 
+                    DataGridViewTaskManager.Release(DataGridViewTaskManager.Items);
+                }
+        }
+
+        public void ClearTaskManager()
+        {
+            Application.DoEvents();
+            Thread.Yield();
+        }
+
+        public void ClearSessionManager()
+        {
+            Application.DoEvents();
+            Thread.Yield();
+        }
+
+        public IWebSession AddSession(IWebSession webSession)
+        {
+            if (DataGridViewSessionManager.DataGridView.InvokeRequired)
+            {
+                AddSessionDelegate d = AddSession;
+                object[] arr = {webSession};
+                webSession = (IWebSession) Invoke(d, arr);
+            }
+            else
+                try
+                {
+                    DataGridViewSessionManager.Wait(DataGridViewSessionManager.Items);
+                    webSession = DataGridViewSessionManager.AddSession(webSession);
+                    Application.DoEvents();
+                    Thread.Yield();
+                }
+                catch (Exception exception)
+                {
+                    LastError = exception;
+                }
+                finally
+                {
+                    // Whether or not the exception was thrown, the current 
+                    // thread owns the mutex, and must release it. 
+                    DataGridViewSessionManager.Release(DataGridViewSessionManager.Items);
+                }
+            return webSession;
+        }
+
+        public void RemoveSession(IWebSession webSession)
+        {
+            if (DataGridViewSessionManager.DataGridView.InvokeRequired)
+            {
+                RemoveSessionDelegate d = RemoveSession;
+                object[] arr = {webSession};
+                Invoke(d, arr);
+            }
+            else
+                try
+                {
+                    DataGridViewSessionManager.Wait(DataGridViewSessionManager.Items);
+                    DataGridViewSessionManager.RemoveSession(webSession);
+                    Application.DoEvents();
+                    Thread.Yield();
+                }
+                catch (Exception exception)
+                {
+                    LastError = exception;
+                }
+                finally
+                {
+                    // Whether or not the exception was thrown, the current 
+                    // thread owns the mutex, and must release it. 
+                    DataGridViewSessionManager.Release(DataGridViewSessionManager.Items);
+                }
+        }
+
+
+        public void SaveAs(String fileName)
+        {
+            if (DataGridViewTaskManager.DataGridView.InvokeRequired)
+            {
+                SaveAsDelegate d = SaveAs;
+                object[] arr = {};
+                Invoke(d, arr);
+            }
+            else
+                try
+                {
+                    DataGridViewTaskManager.Wait(DataGridViewTaskManager.Items);
+                    using (var outfile = new StreamWriter(fileName))
+                    {
+                        foreach (EmailView emailView in DataGridViewResultManager.Items)
+                        {
+                            outfile.WriteLine(emailView.Address);
+                            Application.DoEvents();
+                            Thread.Yield();
+                        }
+                        outfile.Close();
+                    }
+                    Application.DoEvents();
+                    Thread.Yield();
+                }
+                catch (Exception exception)
+                {
+                    LastError = exception;
+                }
+                finally
+                {
+                    // Whether or not the exception was thrown, the current 
+                    // thread owns the mutex, and must release it. 
+                    DataGridViewTaskManager.Release(DataGridViewTaskManager.Items);
+                }
+        }
+
+        public void IdleLauncher(params object[] parameters)
+        {
+            if (IsRunning) DataGridViewTaskManager.ResumeAllTasks();
+            if (IsRunning) DataGridViewTaskManager.StartAllTasks();
+            Application.DoEvents();
+            Thread.Yield();
+        }
+
+        public void IdleUpdate(params object[] parameters)
+        {
+            Application.DoEvents();
+            Thread.Yield();
+        }
+
+        public string SecretPhase
+        {
+            get { return Settings.SecretPhase; }
+            set { Settings.SecretPhase = value; }
+        }
+
+        public string ActivationEmailTemplate
+        {
+            get { return Settings.ActivationEmailTemplate; }
+            set { Settings.ActivationEmailTemplate = value; }
+        }
+
+        public string AsymmetricAlgorithmPublicKey
+        {
+            get { return Settings.AsymmetricAlgorithmPublicKey; }
+            set { Settings.AsymmetricAlgorithmPublicKey = value; }
+        }
+
+        public string[] FeatureNames
+        {
+            get { return Settings.FeatureNames; }
+            set { Settings.FeatureNames = value; }
+        }
+
+        public string ApplicationName
+        {
+            get { return Settings.ApplicationName; }
+            set { Settings.ApplicationName = value; }
+        }
+
+        public string ActivationEmailAddress
+        {
+            get { return Settings.ActivationEmailAddress; }
+            set { Settings.ActivationEmailAddress = value; }
+        }
+
+        public string ActivationEmailSubject
+        {
+            get { return Settings.ActivationEmailSubject; }
+            set { Settings.ActivationEmailSubject = value; }
+        }
+
+        #region DataGridViewTaskManager
+
+        public void StartWorker(params object[] parameters)
+        {
+            IsRunning = true;
+            DataGridViewTaskManager.ResumeAllTasks();
+            DataGridViewTaskManager.StartAllTasks();
+            Application.DoEvents();
+            Thread.Yield();
+        }
+
+        public void StopWorker(params object[] parameters)
+        {
+            IsRunning = false;
+            DataGridViewTaskManager.SuspendAllTasks();
+            Application.DoEvents();
+            Thread.Yield();
+        }
+
+        public void AbortWorker(params object[] parameters)
+        {
+            IsRunning = false;
+            DataGridViewTaskManager.AbortAllTasks();
+            Application.DoEvents();
+            Thread.Yield();
+        }
+
+        #endregion
+
+        private void ProgressCallback(long current, long total)
+        {
+            Debug.Assert(current <= total);
+            if (progressBar1.InvokeRequired)
+            {
+                ProgressCallback d = ProgressCallback;
+                object[] objects = {current, total};
+                Invoke(d, objects);
+            }
+            else
+            {
+                progressBar1.Maximum = (int) Math.Min(total, 10000);
+                progressBar1.Value = (int) (current*progressBar1.Maximum/(1 + total));
+                Application.DoEvents();
+                Thread.Yield();
             }
         }
 
@@ -138,9 +440,9 @@ namespace MyEmailExtractor
             // InvokeRequired required compares the thread ID of the
             // calling thread to the thread ID of the creating thread.
             // If these threads are different, it returns true.
-            if (listViewEmail.InvokeRequired || listViewQueue.InvokeRequired)
+            if (dataGridViewEmail.InvokeRequired || dataGridViewQueue.InvokeRequired)
             {
-                OnWebTaskDelegate d = OnWebTaskComplite;
+                OnWebTaskCallbackDelegate d = OnWebTaskComplite;
                 object[] arr = {webTask};
                 try
                 {
@@ -149,126 +451,140 @@ namespace MyEmailExtractor
                 catch (Exception exception)
                 {
                     LastError = exception;
-                    Debug.WriteLine(MethodBase.GetCurrentMethod().Name + ":" + LastError);
                 }
             }
             else
             {
-                foreach (
-                    string email in
-                        webTask.ReturnFields.Email.Where(email => listViewEmail.Items[email.ToLower()] == null)
-                    )
+                try
                 {
-                    listViewEmail.Items.Add(new ListViewItem(email) {ImageIndex = 0, Name = email.ToLower()});
+                    DataGridViewResultManager.Wait(DataGridViewResultManager.DataGridView);
+                    foreach (
+                        EmailView result in
+                            webTask.ReturnFields.Email.Where(
+                                s =>
+                                    DataGridViewResultManager.Items.All(
+                                        i => string.Compare(i.Address, s, StringComparison.OrdinalIgnoreCase) != 0))
+                                .Select(s => new EmailView {Address = s}))
+                        try
+                        {
+                            DataGridViewResultManager.Items.Add(result);
+                            Application.DoEvents();
+                            Thread.Yield();
+                        }
+                        catch (Exception exception)
+                        {
+                            LastError = exception;
+                        }
+                        finally
+                        {
+                        }
+                    Application.DoEvents();
+                    Thread.Yield();
+                }
+                finally
+                {
+                    // Whether or not the exception was thrown, the current 
+                    // thread owns the mutex, and must release it. 
+                    DataGridViewResultManager.Release(DataGridViewResultManager.DataGridView);
                 }
                 var baseUri = new Uri(webTask.Url);
-                foreach (Uri uri in webTask.ReturnFields.Url.Select(url => new Uri(baseUri, url)))
+                try
                 {
-                    try
-                    {
-                        Debug.Assert(WebTaskManager != null, "WebTaskManager != null");
-                        IWebTask newTask = WebTaskManager.AddTask(new WebTask
+                    DataGridViewTaskManager.Wait(DataGridViewTaskManager.DataGridView);
+                    foreach (Uri uri in webTask.ReturnFields.Url.Select(s => new Uri(baseUri, s)))
+                        try
                         {
-                            Url = uri.ToString(),
-                            Level = webTask.Level + 1,
-                            OnStartCallback = OnWebTaskDefault,
-                            OnAbortCallback = OnWebTaskDefault,
-                            OnResumeCallback = OnWebTaskDefault,
-                            OnErrorCallback = OnWebTaskDefault,
-                            OnCompliteCallback = OnWebTaskComplite,
-                            ReturnFieldInfos = ReturnFieldInfos
-                        });
-                        Debug.WriteLine(newTask.ToString());
-                    }
-                    catch (Exception exception)
-                    {
-                        LastError = exception;
-                        Debug.WriteLine(MethodBase.GetCurrentMethod().Name + ":" + LastError);
-                    }
+                            var webSession = new WebSession();
+                            AddTask(new WebTask
+                            {
+                                Url = uri.ToString(),
+                                Level = webTask.Level + 1,
+                                OnStartCallback = OnWebTaskDefault,
+                                OnAbortCallback = OnWebTaskDefault,
+                                OnResumeCallback = OnWebTaskDefault,
+                                OnErrorCallback = OnWebTaskDefault,
+                                OnSuspendCallback = OnWebTaskDefault,
+                                OnCompliteCallback = OnWebTaskComplite,
+                                ReturnFieldInfos = ReturnFieldInfos,
+                                WebSession = webSession,
+                            });
+                            Application.DoEvents();
+                            Thread.Yield();
+                        }
+                        catch (Exception exception)
+                        {
+                            LastError = exception;
+                        }
+                        finally
+                        {
+                        }
+                    Application.DoEvents();
+                    Thread.Yield();
+                }
+                catch (Exception exception)
+                {
+                    LastError = exception;
+                }
+                finally
+                {
+                    // Whether or not the exception was thrown, the current 
+                    // thread owns the mutex, and must release it. 
+                    DataGridViewTaskManager.Release(DataGridViewTaskManager.DataGridView);
                 }
             }
-        }
-
-        public void NavigateToAdvert(object sender, WebBrowserNavigatingEventArgs e)
-        {
-            if (_navigatingCountdown == 0)
-            {
-                e.Cancel = true;
-                String url = e.Url.ToString();
-                Process.Start(url);
-            }
-        }
-
-        public void SaveAs(String fileName)
-        {
-            var outfile = new StreamWriter(fileName);
-            foreach (ListViewItem lvi in listViewEmail.Items)
-            {
-                outfile.WriteLine(lvi.Text);
-            }
-            outfile.Close();
-        }
-
-        public void AdvertRefresh(object sender, EventArgs e)
-        {
-            _navigatingCountdown = 3;
-            webBrowser1.Navigate(webBrowser1.Url);
         }
 
         private void childForm_Load(object sender, EventArgs e)
         {
-            listViewEmail.SuspendLayout();
-            listViewQueue.SuspendLayout();
-        }
-
-        private void ResumeSuspendLayout(object sender, EventArgs e)
-        {
-            listViewEmail.ResumeLayout();
-            listViewQueue.ResumeLayout();
-            Thread.Sleep(0);
-            listViewEmail.SuspendLayout();
-            listViewQueue.SuspendLayout();
-        }
-
-        private void webBrowser1_DocumentCompleted(object sender, WebBrowserDocumentCompletedEventArgs e)
-        {
-            //WebSimulator.Window = WebSimulator.TopmostWindow;
-            _navigatingCountdown--;
-        }
-
-        private void timerLauncher_Tick(object sender, EventArgs e)
-        {
-            WebTaskManager.StartAllTasks();
-        }
-
-
-        private void listView2_MouseDoubleClick(object sender, MouseEventArgs e)
-        {
-            if (listViewQueue.SelectedItems.Count == 1)
-            {
-                ListView.SelectedListViewItemCollection items = listViewQueue.SelectedItems;
-                ListViewItem item = items[0];
-                int index = listViewQueue.Items.IndexOf(item);
-                IWebTask task = WebTaskManager.Tasks[index];
-                string url = task.Url;
-                Process.Start(url);
-            }
-        }
-
-        private void listView1_DoubleClick(object sender, EventArgs e)
-        {
-            if (listViewEmail.SelectedItems.Count == 1)
-            {
-                ListView.SelectedListViewItemCollection items = listViewEmail.SelectedItems;
-                ListViewItem item = items[0];
-                Process.Start(@"mailto:" + item.Name);
-            }
+            //Application.Idle += IdleLauncher;
         }
 
         private void ChildForm_FormClosing(object sender, FormClosingEventArgs e)
         {
-            WebTaskManager.AbortAllTasks();
-            Thread.Sleep(0);
+            DataGridViewTaskManager.AbortAllTasks();
+            Application.DoEvents();
+            Thread.Yield();
+        }
+
+        private void ChildForm_Activated(object sender, EventArgs e)
+        {
+            var mainForm = MdiParent as IMainForm;
+            if (mainForm != null && mainForm.MaxLevel != MaxLevel) mainForm.MaxLevel = MaxLevel;
+            if (mainForm != null && mainForm.MaxThreads != MaxThreads) mainForm.MaxThreads = MaxThreads;
+            Application.DoEvents();
+            Thread.Yield();
+        }
+
+        private void dataGridViewQueue_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            try
+            {
+                DataGridViewTaskManager.Wait(DataGridViewTaskManager.DataGridView);
+                Process.Start(gridView2.GetRowCellValue(gridView2.FocusedRowHandle,"Url").ToString());
+            }
+            catch (Exception exception)
+            {
+            }
+            finally
+            {
+                DataGridViewTaskManager.Release(DataGridViewTaskManager.DataGridView);
+            }
+        }
+
+        private void dataGridViewEmail_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            try
+            {
+                DataGridViewResultManager.Wait(DataGridViewResultManager.DataGridView);
+                Process.Start(string.Format("mailto:{0}", gridView1.GetRowCellValue(gridView1.FocusedRowHandle, "Address")));
+            }
+            catch (Exception exception)
+            {
+            }
+            finally
+            {
+                DataGridViewResultManager.Release(DataGridViewResultManager.DataGridView);
+            }
         }
     }
 }

@@ -102,7 +102,7 @@
             this.textBoxMaxThreads.Size = new System.Drawing.Size(88, 23);
             this.textBoxMaxThreads.TabIndex = 6;
             this.textBoxMaxThreads.Value = new decimal(new int[] {
-            24,
+            8,
             0,
             0,
             0});
